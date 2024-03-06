@@ -4,9 +4,7 @@
 - Once built, run `docker-compose up`.
 - Client will start listening at port `3333` and server at port `4000`.
 
-<video width="800" autoplay loop muted>
-  <source src="assets/showcase.mp4" type="video/mp4">
-</video>
+https://github.com/rahulrawat03/cms/assets/65608934/865452d5-2b21-466a-b706-cae91caaa75c
 
 # About
 
