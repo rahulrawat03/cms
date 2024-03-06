@@ -1,0 +1,30 @@
+.inputGroup {
+  margin: var(--value-none) var(--spacing-normal);
+  color: var(--color-text-dark);
+  width: var(--size-part-ninety);
+}
+
+.inputLabel {
+  display: block;
+  font-size: var(--font-size-small);
+  margin-bottom: var(--spacing-x-small);
+  text-transform: capitalize;
+}
+
+.input {
+  outline: none;
+  border: var(--thickness-small) solid var(--color-secondary);
+  border-radius: var(--border-radius-small);
+  display: block;
+  color: var(--color-text-dark);
+  margin: var(--value-none);
+  width: var(--size-full);
+  padding: var(--spacing-large) var(--spacing-normal);
+  height: var(--size-large);
+  font-size: var(--font-size-normal);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  appearance: none;
+}

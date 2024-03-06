@@ -1,0 +1,16 @@
+.search {
+  flex-grow: 1;
+}
+
+.input {
+  outline: none;
+  border: none;
+  background: var(--color-secondary);
+  color: var(--color-text-dark);
+  height: var(--size-large);
+  width: var(--size-full);
+  margin: var(--spacing-small);
+  padding: var(--spacing-small);
+  font-size: var(--font-size-small);
+  border-radius: var(--border-radius-small);
+}

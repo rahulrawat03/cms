@@ -1,0 +1,4 @@
+.documentPanel {
+  display: flex;
+  flex-direction: column;
+}

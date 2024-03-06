@@ -1,0 +1,6 @@
+.documentList {
+  background: var(--color-secondary);
+  min-height: var(--size-height-full);
+  width: var(--size-width-part-thirty);
+  padding: var(--spacing-large);
+}

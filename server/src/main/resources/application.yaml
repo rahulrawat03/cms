@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cms
+    username: cms
+    password: cms
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    # Show logs in terminal for each SQL query performed
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        # Allow Hibernate to create SQL optimized for chosen DBMS
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        # Format the SQL query to be logged
+        '[format_sql]': true
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+cors:
+  allowed-origins: '*'
+DATA_DIRECTORY: '/data'

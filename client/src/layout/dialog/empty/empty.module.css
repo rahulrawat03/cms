@@ -1,0 +1,12 @@
+.empty {
+  display: flex;
+  flex-direction: column;
+  height: var(--size-full);
+  align-items: center;
+  justify-content: center;
+}
+
+.text {
+  font-size: var(--font-size-small);
+  padding: var(--spacing-large);
+}

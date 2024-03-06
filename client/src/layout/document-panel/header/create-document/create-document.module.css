@@ -1,0 +1,64 @@
+.createDocument {
+  position: relative;
+  margin: var(--value-none) var(--spacing-small);
+  width: var(--size-x-large);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.createDocumentBtn {
+  outline: none;
+  border: none;
+  cursor: pointer;
+  background: var(--color-tertiary);
+  color: var(--color-text-light);
+  border-radius: var(--border-radius-small);
+  font-size: var(--font-size-x-small);
+  padding: var(--spacing-small) var(--spacing-normal);
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: var(--thickness-x-small);
+}
+
+.close {
+  border-radius: var(--border-radius-full);
+}
+
+.createOptions {
+  position: absolute;
+  top: var(--size-full);
+  right: var(--value-none);
+  background: var(--color-secondary);
+  color: var(--color-text-dark);
+  border: var(--thickness-small) solid var(--color-tertiary);
+  list-style: none;
+  width: var(--size-huge);
+  height: var(--size-x-huge);
+  overflow: hidden scroll;
+  border-radius: var(--border-radius-normal);
+  padding: var(--spacing-x-small) var(--value-none);
+}
+
+.createOptionWrapper {
+  padding: var(--spacing-x-small) var(--spacing-small);
+  margin-bottom: var(--spacing-x-small);
+  margin-left: var(--spacing-x-small);
+  transition: var(--transition-small);
+}
+
+.createOptionWrapper:hover {
+  background: var(--color-tertiary);
+  color: var(--color-text-light);
+}
+
+.createOption {
+  display: block;
+  font-size: var(--font-size-x-small);
+  color: var(--color-text-dark);
+  text-decoration: none;
+}
+
+.createOptionWrapper:hover .createOption {
+  color: var(--color-text-light);
+}

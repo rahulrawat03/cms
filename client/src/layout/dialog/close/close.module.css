@@ -1,0 +1,17 @@
+.close {
+  position: absolute;
+  color: var(--color-text-dark);
+  display: flex;
+  align-items: center;
+  width: max-content;
+  border: none;
+  outline: none;
+  top: var(--value-none);
+  right: var(--value-none);
+  background: var(--color-secondary);
+  border-radius: var(--border-radius-full);
+  margin-top: var(--spacing-normal);
+  margin-right: var(--spacing-normal);
+  padding: var(--spacing-x-small);
+  cursor: pointer;
+}

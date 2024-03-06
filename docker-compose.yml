@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  db:
+    container_name: database
+    image: postgres
+    ports:
+      - 4001:5432
+    environment:
+      POSTGRES_PASSWORD: root
+    volumes:
+      - cms-db:/var/lib/postgresql/data
+      - ./server/db:/docker-entrypoint-initdb.d
+    networks:
+      - cms-network
+    restart: always
+  api:
+    container_name: server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - 4000:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/cms
+      DATA_DIRECTORY: /data
+    volumes:
+      - cms-data:/data
+    networks:
+      - cms-network
+    depends_on:
+      - db
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - 3333:80
+    environment:
+      VITE_API_ENDPOINT: api:4000
+    networks:
+      - cms-network
+volumes:
+  cms-db:
+  cms-data:
+networks:
+  cms-network:
+    driver: bridge

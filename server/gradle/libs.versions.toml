@@ -1,0 +1,16 @@
+[versions]
+springBootVersion = "3.2.3"
+springDepManagementVersion = "1.1.4"
+postgresVersion = "42.7.2"
+spotBugsVersion = "4.8.3"
+
+[libraries]
+springBoot = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "springBootVersion" }
+springBootJpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "springBootVersion" }
+springBootDevTools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "springBootVersion" }
+postgres = { module = "org.postgresql:postgresql", version.ref = "postgresVersion" }
+spotBugs = { module = "com.github.spotbugs:spotbugs-annotations", version.ref = "spotBugsVersion" }
+
+[plugins]
+springBoot = { id = "org.springframework.boot", version.ref = "springBootVersion" }
+springDepManagement = { id = "io.spring.dependency-management", version.ref = "springDepManagementVersion" }

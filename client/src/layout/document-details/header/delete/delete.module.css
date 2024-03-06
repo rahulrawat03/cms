@@ -1,0 +1,5 @@
+.delete {
+  background: transparent;
+  color: var(--color-text-light);
+  border: var(--thickness-x-small) solid var(--color-secondary);
+}

@@ -1,0 +1,10 @@
+.save {
+  transition: var(--transition-small);
+  background: var(--color-secondary);
+  color: var(--color-text-dark);
+  border: var(--thickness-x-small) solid var(--color-secondary);
+}
+
+.save:hover {
+  background: var(--color-background);
+}

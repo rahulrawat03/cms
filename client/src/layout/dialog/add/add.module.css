@@ -1,0 +1,29 @@
+.add {
+  position: absolute;
+  right: var(--size-x-large);
+  bottom: var(--size-huge);
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: var(--size-huge);
+}
+
+.addButton {
+  background: var(--color-tertiary);
+  padding: var(--spacing-small);
+  border-radius: var(--border-radius-small);
+  width: var(--size-x-large);
+  outline: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--font-size-x-small);
+  text-transform: uppercase;
+  transition: var(--transition-small);
+  letter-spacing: var(--thickness-small);
+  font-weight: bold;
+  color: var(--color-text-light);
+}
+
+.addButton:hover {
+  background: var(--color-primary);
+}

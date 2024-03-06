@@ -1,0 +1,26 @@
+.document {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  padding: var(--spacing-small) var(--spacing-normal);
+  text-decoration: none;
+  border-bottom: var(--thickness-x-small) solid var(--color-tertiary);
+}
+
+.document:hover {
+  background: var(--color-tertiary);
+  transition: var(--transition-small);
+  color: var(--color-text-light);
+}
+
+.documentTitle {
+  display: inline-block;
+  font-size: var(--font-size-small);
+  font-weight: normal;
+  width: var(--size-part-eighty);
+  text-align: start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

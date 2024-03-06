@@ -1,0 +1,25 @@
+.wrapper {
+  position: fixed;
+  top: var(--value-none);
+  left: var(--value-none);
+  width: var(--size-width-full);
+  height: var(--size-height-full);
+  backdrop-filter: blur(var(--thickness-small));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog {
+  width: var(--size-half);
+}
+
+.content {
+  height: var(--size-height-part-seventy);
+  overflow: hidden scroll;
+  background: var(--color-background);
+  border-radius: var(--border-radius-huge);
+  padding: var(--spacing-large);
+  box-shadow: var(--shadow);
+  position: relative;
+}

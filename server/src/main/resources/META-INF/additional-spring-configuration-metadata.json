@@ -1,0 +1,12 @@
+{
+  "properties": [
+    {
+      "name": "cors.allowed-origins",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "DATA_DIRECTORY",
+      "type": "java.lang.String"
+    }
+  ]
+}

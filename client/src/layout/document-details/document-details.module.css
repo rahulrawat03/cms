@@ -1,0 +1,7 @@
+.documentDetails {
+  height: var(--size-part-ninety);
+  width: var(--size-width-part-seventy);
+  margin-left: var(--spacing-large);
+  padding: var(--spacing-normal) var(--spacing-x-large);
+  overflow: hidden scroll;
+}

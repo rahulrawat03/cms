@@ -1,0 +1,20 @@
+.header {
+  background: var(--color-primary);
+  color: var(--color-text-light);
+  font-size: var(--font-size-normal);
+  padding: var(--spacing-small) var(--spacing-large);
+  text-transform: capitalize;
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  outline: none;
+  border: none;
+  color: var(--color-text-light);
+  padding: var(--spacing-x-small) var(--spacing-small);
+  margin-right: var(--spacing-large);
+  font-size: var(--font-size-small);
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+}

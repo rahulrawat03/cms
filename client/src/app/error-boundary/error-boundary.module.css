@@ -1,0 +1,18 @@
+.error {
+  width: var(--size-width-full);
+  height: var(--size-height-full);
+  background: var(--color-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.title {
+  font-size: var(--font-size-large);
+  margin: var(--spacing-normal) var(--value-none);
+}
+
+.body {
+  font-size: var(--font-size-normal);
+}

@@ -1,0 +1,6 @@
+.layout {
+  display: flex;
+  width: var(--size-full);
+  height: var(--size-height-full);
+  overflow: hidden;
+}

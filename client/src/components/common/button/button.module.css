@@ -1,0 +1,21 @@
+.object {
+  display: flex;
+  align-items: center;
+  background: var(--color-tertiary);
+  cursor: pointer;
+  color: var(--color-text-light);
+  outline: none;
+  border: none;
+  margin: var(--value-none) var(--spacing-normal);
+  width: var(--size-part-ninety);
+  border-radius: var(--border-radius-small);
+  padding: var(--spacing-large) var(--spacing-normal);
+  height: var(--size-large);
+  font-size: var(--font-size-normal);
+  text-transform: capitalize;
+}
+
+.object:hover {
+  background: var(--color-primary);
+  transition: var(--transition-small);
+}
