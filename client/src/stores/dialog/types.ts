@@ -1,4 +1,4 @@
-import { ArrayValue, Callback, ObjectValue } from "../../types";
+import { Callback } from "../../types";
 import { RootBuilder } from "../../layout";
 
 export enum LayerType {
@@ -8,7 +8,6 @@ export enum LayerType {
 
 export interface Layer {
   builder: RootBuilder;
-  value: ArrayValue | ObjectValue;
-  getValue: Callback<ArrayValue | ObjectValue>;
+  update: Callback<void>;
   type: LayerType;
 }

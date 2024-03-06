@@ -1,6 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { Layer, LayerType } from "./types";
-import { ArrayValue, Builder, ObjectValue, Value } from "../../types";
+import { Layer } from "./types";
 
 class DialogStore {
   private layers: Layer[] = [];
@@ -38,9 +37,11 @@ class DialogStore {
 
   public clear = () => {
     runInAction(() => {
-      this.updateCurrentData();
+      while (this.layers.length > 0) {
+        this.updateCurrentData();
 
-      this.layers = [];
+        this.layers.pop();
+      }
     });
   };
 
@@ -50,35 +51,8 @@ class DialogStore {
 
   private updateCurrentData = () => {
     if (!this.isEmpty() && this.current) {
-      if (this.current.type === LayerType.ARRAY) {
-        this.updateArrayData();
-      } else {
-        this.updateObjectData();
-      }
+      this.current.update();
     }
-  };
-
-  private updateArrayData = () => {
-    this.current!.value.length = 0;
-    const updatedValues = this.current!.getValue() as ArrayValue;
-
-    (this.current!.value as ArrayValue).push(...updatedValues);
-  };
-
-  private updateObjectData = () => {
-    const values = this.current!.value as ObjectValue;
-    const updatedValues = this.current!.getValue() as ObjectValue;
-
-    for (const key in values) {
-      values[key] = updatedValues[key];
-    }
-  };
-
-  public addBuilder = (key: string, builder: Builder<Value>) => {
-    runInAction(() => {
-      this.current?.builder.addBuilder(key, builder);
-      this.trigger = !this.trigger;
-    });
   };
 }
 

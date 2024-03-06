@@ -212,22 +212,30 @@ export class SchemaBuilder {
     return (value as ObjectValue)?.["type"] as string;
   };
 
-  public getDefaultValue = (type: SchemaType): Value => {
-    switch (type) {
-      case SchemaType.NUMBER:
-        return 0;
+  public getDefaultValue = (type: string) => {
+    const schemaType = this.getParentSchemaType(type);
+
+    switch (schemaType) {
       case SchemaType.STRING:
-        return "";
+      case SchemaType.NUMBER:
+      case SchemaType.IMAGE:
+      case SchemaType.FILE:
       case SchemaType.ARRAY:
-        return [];
+        return this.getDefaultPrimitiveValue(type);
+
       case SchemaType.OBJECT:
+        return this.getDefaultObjectValue(type);
+
+      case SchemaType.DOCUMENT:
+        return this.getDefaultDocumentValue(type);
+
       default:
-        return {};
+        throw new Error(`Invalid schema type "${type}" found.`);
     }
   };
 
-  public getDefaultDocument = (type: string): Document => {
-    const documentData = this.getEmptyDocumentValue(type);
+  private getDefaultDocumentValue = (type: string): Document => {
+    const documentData = this.getDefaultObjectValue(type);
 
     const document: Document = {
       id: NaN,
@@ -240,17 +248,24 @@ export class SchemaBuilder {
     return document;
   };
 
-  private getEmptyDocumentValue = (type: string): Value => {
-    const parentSchemaType = this.getParentSchemaType(type);
+  private getDefaultPrimitiveValue = (type: string): Value => {
+    switch (type) {
+      case SchemaType.NUMBER:
+        return 0;
+      case SchemaType.STRING:
+        return "";
+      case SchemaType.ARRAY:
+      default:
+        return [];
+    }
+  };
+
+  private getDefaultObjectValue = (type: string): ObjectValue => {
     const schema = this.getSchema(type);
 
-    if (this.isPrimitiveType(parentSchemaType)) {
-      return this.getDefaultValue(parentSchemaType as SchemaType);
-    }
-
-    const value: ObjectValue = {};
+    const value: ObjectValue = { type };
     for (const property of schema.properties) {
-      value[property.name] = this.getEmptyDocumentValue(property.type);
+      value[property.name] = this.getDefaultValue(property.type);
     }
 
     return value;

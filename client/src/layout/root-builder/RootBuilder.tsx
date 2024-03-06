@@ -116,7 +116,8 @@ export class RootBuilder implements Builder<ArrayValue | ObjectValue> {
   };
 
   public value = () => {
-    return this.isArrayType ? this.arrayValue() : this.objectValue();
+    const value = this.isArrayType ? this.arrayValue() : this.objectValue();
+    return value;
   };
 
   private objectValue = () => {

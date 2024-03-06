@@ -34,7 +34,7 @@ export class ObjectBuilder implements Builder<ObjectValue> {
   }
 
   private handleClick = () => {
-    objectStore.add(this.builder, this._value, this.value);
+    objectStore.add(this.builder, this.update);
   };
 
   public build = () => {
@@ -50,9 +50,14 @@ export class ObjectBuilder implements Builder<ObjectValue> {
   };
 
   public value = () => {
-    return {
-      type: this.schema.type,
-      ...this.builder.value(),
-    };
+    return this._value;
+  };
+
+  public update = () => {
+    const updatedValue = this.builder.value() as ObjectValue;
+
+    for (const property in updatedValue) {
+      this._value[property] = updatedValue[property];
+    }
   };
 }

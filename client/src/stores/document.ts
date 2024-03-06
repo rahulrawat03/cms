@@ -5,7 +5,7 @@ import {
   observable,
   runInAction,
 } from "mobx";
-import { Document, ObjectValue, Response } from "../types";
+import { Document, ObjectValue, Response, SchemaType } from "../types";
 import { Constant } from "../constants";
 import { RootBuilder } from "../layout";
 import { SchemaBuilder } from "../schema";
@@ -28,18 +28,24 @@ class DocumentStore {
 
   private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
+  private _loadingDocuments = false;
+
   constructor() {
     makeObservable<
       DocumentStore,
-      "_documents" | "_currentDocument" | "builders" | "searchQuery"
+      | "_documents"
+      | "_currentDocument"
+      | "searchQuery"
+      | "_loadingDocuments"
+      | "updateLoadingState"
     >(this, {
       _documents: observable,
       _currentDocument: observable,
-      builders: observable,
       searchQuery: observable,
+      _loadingDocuments: observable,
       fetchDocument: action,
       fetchDocuments: action,
-      registerBuilder: action,
+      updateLoadingState: action,
       documents: computed,
       currentDocument: computed,
     });
@@ -48,7 +54,11 @@ class DocumentStore {
   }
 
   public registerBuilder = (id: string, builder: RootBuilder) => {
+    this.updateLoadingState(true);
+
     this.builders.set(id, builder);
+
+    this.updateLoadingState(false);
   };
 
   public getBuilder = (id: string, type: string) => {
@@ -71,6 +81,14 @@ class DocumentStore {
     return this._currentDocument;
   }
 
+  public get loadingDocuments() {
+    return this._loadingDocuments;
+  }
+
+  private updateLoadingState(state: boolean) {
+    runInAction(() => (this._loadingDocuments = state));
+  }
+
   public fetchDocuments = async () => {
     if (this._documents.length > 0) {
       return;
@@ -84,6 +102,8 @@ class DocumentStore {
       if (!response.success) {
         return;
       }
+
+      response.data.forEach(this.populateEmptyProperties);
 
       runInAction(() => {
         this._documents = response.data.sort((a, b) =>
@@ -110,6 +130,8 @@ class DocumentStore {
         return;
       }
 
+      this.populateEmptyProperties(response.data);
+
       runInAction(() => {
         this._currentDocument = response.data;
       });
@@ -128,17 +150,19 @@ class DocumentStore {
     }
 
     try {
-      await fetch(
-        `${DocumentStore._documentsEndPoint}/${this._currentDocument.id}`,
-        {
-          method: "PUT",
-          headers: Constant.httpHeaders,
-          body: JSON.stringify({
-            data: builder.value(),
-            identifier: this._currentDocument.identifier,
-          }),
-        }
-      );
+      const { id, type } = this._currentDocument;
+      const data = builder.value() as ObjectValue;
+      const identifierName =
+        SchemaBuilder.instance.getSchema(type).identifier ?? "";
+
+      await fetch(`${DocumentStore._documentsEndPoint}/${id}`, {
+        method: "PUT",
+        headers: Constant.httpHeaders,
+        body: JSON.stringify({
+          data,
+          identifier: data[identifierName],
+        }),
+      });
     } catch (ex: unknown) {
       // pass
     }
@@ -217,19 +241,30 @@ class DocumentStore {
   };
 
   public createDraft = (type: string) => {
-    const defaultDocument = SchemaBuilder.instance.getDefaultDocument(type);
+    const defaultDocument = SchemaBuilder.instance.getDefaultValue(
+      type as SchemaType
+    ) as Document;
+
+    const schema = SchemaBuilder.instance.getSchema(type);
+    const builder = new RootBuilder(schema.properties, defaultDocument.data);
 
     runInAction(() => {
       this._currentDocument = defaultDocument;
+      this.registerBuilder(type, builder);
     });
+  };
 
-    const schema = SchemaBuilder.instance.getSchema(type);
-    const builder = new RootBuilder(
-      schema.properties,
-      defaultDocument.data as ObjectValue
-    );
+  private populateEmptyProperties = (document: Document) => {
+    const schemaBuilder = SchemaBuilder.instance;
+    const schema = schemaBuilder.getSchema(document.type);
 
-    this.builders.set(type, builder);
+    for (const property of schema.properties) {
+      if (!document.data[property.name]) {
+        document.data[property.name] = schemaBuilder.getDefaultValue(
+          property.type as SchemaType
+        );
+      }
+    }
   };
 
   public set query(q: string) {

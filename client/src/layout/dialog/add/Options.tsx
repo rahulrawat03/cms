@@ -1,7 +1,6 @@
 import { ComponentMap } from "../../../components";
 import { SchemaBuilder } from "../../../schema";
-import { dialogStore } from "../../../stores";
-import { SchemaType } from "../../../types";
+import { arrayStore } from "../../../stores";
 import css from "./options.module.css";
 
 export function Options() {
@@ -25,14 +24,12 @@ function Option({ type }: Readonly<OptionProps>) {
 
   const parentSchemaType = schemaBuilder.getParentSchemaType(type);
   const schema = schemaBuilder.getSchema(type);
-  const defaultValue = schemaBuilder.getDefaultValue(
-    parentSchemaType as SchemaType
-  );
+  const defaultValue = schemaBuilder.getDefaultValue(type);
 
   const handleClick = () => {
     const key = `${type}-${crypto.randomUUID()}`;
 
-    dialogStore.addBuilder(
+    arrayStore.addBuilder(
       key,
       new ComponentMap[parentSchemaType]({
         key,

@@ -2,7 +2,7 @@ export interface Document {
   id: number;
   type: string;
   identifier: string;
-  data: Value;
+  data: ObjectValue;
   createdAt: string;
 }
 

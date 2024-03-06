@@ -22,12 +22,12 @@ export const schema: Schema[] = [
         type: "number",
       },
       {
-        name: "actors",
-        type: "array",
-      },
-      {
         name: "criticsReview",
         type: "critics",
+      },
+      {
+        name: "actors",
+        type: "actor",
       },
     ],
   },
@@ -69,6 +69,24 @@ export const schema: Schema[] = [
       {
         name: "Critic C",
         type: "number",
+      },
+    ],
+  },
+  {
+    type: "actor",
+    as: "object",
+    properties: [
+      {
+        name: "Name",
+        type: "string",
+      },
+      {
+        name: "hits",
+        type: "number",
+      },
+      {
+        name: "hitMovies",
+        type: "array",
       },
     ],
   },

@@ -1,7 +1,7 @@
 import { ArrayValue, Builder, BuilderConstructorProperties } from "../../types";
 import { Button } from "../common";
 import { RootBuilder } from "../../layout";
-import { arrayStore } from "../../stores/dialog/array";
+import { arrayStore } from "../../stores/";
 
 export class ArrayBuilder implements Builder<ArrayValue> {
   public readonly key: string;
@@ -26,7 +26,7 @@ export class ArrayBuilder implements Builder<ArrayValue> {
   }
 
   private handleClick = () => {
-    arrayStore.add(this.builder, this._value, this.value);
+    arrayStore.add(this.builder, this.update);
   };
 
   public build = () => {
@@ -40,6 +40,11 @@ export class ArrayBuilder implements Builder<ArrayValue> {
   };
 
   public value = () => {
-    return this.builder.value() as ArrayValue;
+    return this._value;
+  };
+
+  public update = () => {
+    this._value.length = 0;
+    this._value.push(...(this.builder.value() as ArrayValue));
   };
 }

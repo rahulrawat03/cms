@@ -16,7 +16,7 @@ export function DocumentDetails() {
     }
   }, [id, type]);
 
-  if (!(id && type && !loading)) {
+  if (!(id && type && !loading && !documentStore.loadingDocuments)) {
     return <div className={css.documentDetails} />;
   }
 
