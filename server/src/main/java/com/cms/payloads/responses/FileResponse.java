@@ -7,7 +7,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 
 public class FileResponse {
-  private Resource resource;
+  private final Resource resource;
   private String mimeType;
 
   public FileResponse(Resource resource) {

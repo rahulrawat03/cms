@@ -1,6 +1,8 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { Layer } from "./types";
 
+export * from "./types";
+
 class DialogStore {
   private layers: Layer[] = [];
   public trigger: boolean = false;

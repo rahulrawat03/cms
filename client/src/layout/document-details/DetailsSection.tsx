@@ -1,20 +1,17 @@
+import { SchemaBuilder } from "@cms/schema";
+import { documentStore } from "@cms/stores";
 import { observer } from "mobx-react-lite";
-import { SchemaBuilder } from "../../schema";
-import { documentStore } from "../../stores";
-import { Header } from "./header";
 import css from "./document-details.module.css";
+import { Header } from "./header";
 
 export const DetailsSection = observer(Component);
 
 interface DetailsSectionProps {
-  id: string;
   type: string;
 }
 
-function Component({ id, type }: Readonly<DetailsSectionProps>) {
-  const builder = documentStore.getBuilder(id, type);
-
-  if (!(documentStore.currentDocument && builder)) {
+function Component({ type }: Readonly<DetailsSectionProps>) {
+  if (!(documentStore.currentDocument && documentStore.builder)) {
     return <div className={css.documentDetails} />;
   }
 
@@ -27,7 +24,7 @@ function Component({ id, type }: Readonly<DetailsSectionProps>) {
   return (
     <div>
       <Header title={type} />
-      <div className={css.documentDetails}>{builder.build()}</div>;
+      <div className={css.documentDetails}>{documentStore.builder.build()}</div>
     </div>
   );
 }

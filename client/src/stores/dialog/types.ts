@@ -1,5 +1,5 @@
-import { Callback } from "../../types";
-import { RootBuilder } from "../../layout";
+import { RootBuilder } from "@cms/layout";
+import { Callback } from "@cms/types";
 
 export enum LayerType {
   ARRAY,

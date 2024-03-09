@@ -1,5 +1,13 @@
 import { Constant } from "../constants";
-import { Document, ObjectValue, Schema, SchemaType, Value } from "../types";
+import {
+  Document,
+  File,
+  ObjectValue,
+  Schema,
+  SchemaType,
+  TypedObject,
+  Value,
+} from "../types";
 
 export class SchemaBuilder {
   private static _instance: SchemaBuilder;
@@ -15,14 +23,6 @@ export class SchemaBuilder {
   private documentTypes = new Map<string, Schema>();
   private objectTypes = new Map<string, Schema>();
 
-  public get schemaTypes() {
-    return <const>[...Constant.primiteSchemaTypes, ...this.objectTypes.keys()];
-  }
-
-  public get documentSchemaTypes() {
-    return <const>[...this.documentTypes.keys()];
-  }
-
   private constructor(public schemas: Schema[]) {
     for (const schema of schemas) {
       this.populateTypes(schema, schema.as);
@@ -31,6 +31,8 @@ export class SchemaBuilder {
     this.validateUnregisteredTypes();
     this.validateDuplicateProperties();
   }
+
+  // Initializer methods =========================================
 
   private populateTypes = (schema: Schema, as: string) => {
     const type = schema.type;
@@ -95,6 +97,8 @@ export class SchemaBuilder {
             Schema "${schema.type}" has duplicate properties by name "${name}"
           `);
         }
+
+        registeredProperties.add(name);
       }
     }
   };
@@ -124,6 +128,16 @@ export class SchemaBuilder {
       throw new Error(`Unregistered types found: ${[...unregisteredTypes]}`);
     }
   };
+
+  // Schema Utilities ===============================================
+
+  public get schemaTypes() {
+    return <const>[...Constant.primiteSchemaTypes, ...this.objectTypes.keys()];
+  }
+
+  public get documentSchemaTypes() {
+    return <const>[...this.documentTypes.keys()];
+  }
 
   public getSchema = (type: string) => {
     const schemaType = this.getParentSchemaType(type);
@@ -199,6 +213,10 @@ export class SchemaBuilder {
       return SchemaType.ARRAY;
     }
 
+    if (this.isPrimitiveType((value as TypedObject).type)) {
+      return (value as File).type;
+    }
+
     return SchemaType.OBJECT;
   };
 
@@ -209,7 +227,7 @@ export class SchemaBuilder {
       return parentSchemaType;
     }
 
-    return (value as ObjectValue)?.["type"] as string;
+    return (value as TypedObject).type;
   };
 
   public getDefaultValue = (type: string) => {
@@ -255,8 +273,13 @@ export class SchemaBuilder {
       case SchemaType.STRING:
         return "";
       case SchemaType.ARRAY:
-      default:
         return [];
+      default:
+        return {
+          type,
+          name: "",
+          value: "",
+        };
     }
   };
 
@@ -265,7 +288,7 @@ export class SchemaBuilder {
 
     const value: ObjectValue = { type };
     for (const property of schema.properties) {
-      value[property.name] = this.getDefaultValue(property.type);
+      value[property.name] = this.getDefaultValue(property.type) as Value;
     }
 
     return value;

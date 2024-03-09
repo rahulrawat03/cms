@@ -1,3 +1,7 @@
+import { RootBuilder } from "@cms/layout";
+import { SchemaBuilder } from "@cms/schema";
+import { Document, DocumentPreview, ObjectValue, SchemaType } from "@cms/types";
+import { api } from "@cms/utils";
 import {
   action,
   computed,
@@ -5,20 +9,15 @@ import {
   observable,
   runInAction,
 } from "mobx";
-import { Document, ObjectValue, Response, SchemaType } from "../types";
-import { Constant } from "../constants";
-import { RootBuilder } from "../layout";
-import { SchemaBuilder } from "../schema";
+
 import { SearchStore } from "./search";
 
 class DocumentStore {
-  private static readonly _documentsEndPoint: string = `${
-    import.meta.env.VITE_API_ENDPOINT
-  }/document`;
+  private endpoint: string = "/document";
 
-  private builders: Map<string, RootBuilder> = new Map();
+  public _builder: RootBuilder | null = null;
 
-  private _documents: Document[] = [];
+  private _documents: DocumentPreview[] = [];
 
   private _currentDocument: Document | null = null;
 
@@ -28,46 +27,26 @@ class DocumentStore {
 
   private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
-  private _loadingDocuments = false;
-
   constructor() {
     makeObservable<
       DocumentStore,
-      | "_documents"
-      | "_currentDocument"
-      | "searchQuery"
-      | "_loadingDocuments"
-      | "updateLoadingState"
+      "_documents" | "_currentDocument" | "_builder" | "searchQuery"
     >(this, {
       _documents: observable,
       _currentDocument: observable,
+      _builder: observable,
       searchQuery: observable,
-      _loadingDocuments: observable,
       fetchDocument: action,
       fetchDocuments: action,
-      updateLoadingState: action,
       documents: computed,
       currentDocument: computed,
+      updateDocument: action,
     });
 
     this.searchStore = new SearchStore();
   }
 
-  public registerBuilder = (id: string, builder: RootBuilder) => {
-    this.updateLoadingState(true);
-
-    this.builders.set(id, builder);
-
-    this.updateLoadingState(false);
-  };
-
-  public getBuilder = (id: string, type: string) => {
-    if (id === Constant.DRAFT) {
-      return this.builders.get(type);
-    }
-
-    return this.builders.get(id);
-  };
+  // Getters & Setters ==============================================
 
   public get documents() {
     if (this.searchQuery.length === 0) {
@@ -81,13 +60,23 @@ class DocumentStore {
     return this._currentDocument;
   }
 
-  public get loadingDocuments() {
-    return this._loadingDocuments;
+  public get builder(): RootBuilder | null {
+    return this._builder;
   }
 
-  private updateLoadingState(state: boolean) {
-    runInAction(() => (this._loadingDocuments = state));
+  public set query(q: string) {
+    if (this.searchDebounceTimer) {
+      clearTimeout(this.searchDebounceTimer);
+    }
+
+    this.searchDebounceTimer = setTimeout(() => {
+      runInAction(() => {
+        this.searchQuery = q;
+      });
+    }, 500);
   }
+
+  // CRUD ===========================================================
 
   public fetchDocuments = async () => {
     if (this._documents.length > 0) {
@@ -95,21 +84,12 @@ class DocumentStore {
     }
 
     try {
-      const response: Response<Document[]> = await (
-        await fetch(DocumentStore._documentsEndPoint)
-      ).json();
-
-      if (!response.success) {
-        return;
-      }
-
-      response.data.forEach(this.populateEmptyProperties);
+      const documents = await api<DocumentPreview[]>(this.endpoint);
 
       runInAction(() => {
-        this._documents = response.data.sort((a, b) =>
-          a.identifier.localeCompare(b.identifier)
-        );
-        this.searchStore.init(response.data);
+        documents.sort((a, b) => a.identifier.localeCompare(b.identifier));
+        this._documents = documents;
+        this.searchStore.init(documents);
       });
     } catch (ex: unknown) {
       // pass
@@ -122,18 +102,15 @@ class DocumentStore {
         return;
       }
 
-      const response: Response<Document> = await (
-        await fetch(`${DocumentStore._documentsEndPoint}/${id}`)
-      ).json();
+      runInAction(() => (this._builder = null));
 
-      if (!response.success) {
-        return;
-      }
+      const document = await api<Document>(`${this.endpoint}/${id}`);
 
-      this.populateEmptyProperties(response.data);
+      this.populateEmptyProperties(document);
 
       runInAction(() => {
-        this._currentDocument = response.data;
+        this._currentDocument = document;
+        this.updateBuilder(document);
       });
     } catch (ex: unknown) {
       // pass
@@ -141,27 +118,19 @@ class DocumentStore {
   };
 
   public updateDocument = async () => {
-    const builder = this.builders.get(
-      this._currentDocument?.id.toString() ?? ""
-    );
-
-    if (!(this._currentDocument && builder)) {
+    if (!(this._currentDocument && this._builder)) {
       return;
     }
 
     try {
       const { id, type } = this._currentDocument;
-      const data = builder.value() as ObjectValue;
+      const data = this._builder.value() as ObjectValue;
       const identifierName =
         SchemaBuilder.instance.getSchema(type).identifier ?? "";
 
-      await fetch(`${DocumentStore._documentsEndPoint}/${id}`, {
-        method: "PUT",
-        headers: Constant.httpHeaders,
-        body: JSON.stringify({
-          data,
-          identifier: data[identifierName],
-        }),
+      await api<void>(`${this.endpoint}/${id}`, "PUT", {
+        data,
+        identifier: data[identifierName],
       });
     } catch (ex: unknown) {
       // pass
@@ -169,38 +138,28 @@ class DocumentStore {
   };
 
   public createDocument = async () => {
-    const builder = this.builders.get(this._currentDocument?.type ?? "");
-
-    if (!(this._currentDocument && builder)) {
+    if (!(this._currentDocument && this._builder)) {
       return;
     }
 
     try {
-      const type = this._currentDocument.type;
-      const data = builder.value() as ObjectValue;
+      const { type } = this._currentDocument;
+      const data = this._builder.value() as ObjectValue;
       const identifierName =
         SchemaBuilder.instance.getSchema(type).identifier ?? "";
-      const identifier = (data?.[identifierName] ?? "").toString();
+      const identifier = (data?.[identifierName] ?? "") as string;
 
-      const { data: id }: Response<number> = await (
-        await fetch(`${DocumentStore._documentsEndPoint}`, {
-          method: "POST",
-          headers: Constant.httpHeaders,
-          body: JSON.stringify({
-            type,
-            identifier,
-            data,
-          }),
-        })
-      ).json();
+      const { id } = await api<{ id: number }>(`${this.endpoint}`, "POST", {
+        type,
+        identifier,
+        data,
+      });
 
       runInAction(() => {
         this.addDocument({
           id,
-          type,
           identifier,
-          data,
-          createdAt: Constant.DUMMY_DATE,
+          type,
         });
       });
 
@@ -218,10 +177,7 @@ class DocumentStore {
     try {
       const id = this._currentDocument.id;
 
-      await fetch(`${DocumentStore._documentsEndPoint}/${id}`, {
-        method: "DELETE",
-        headers: Constant.httpHeaders,
-      });
+      await api<void>(`${this.endpoint}/${id}`, "DELETE");
 
       const index = this._documents.findIndex((document) => document.id === id);
       runInAction(() => {
@@ -240,17 +196,23 @@ class DocumentStore {
     }
   };
 
+  // UTILITIES ======================================================
+
   public createDraft = (type: string) => {
     const defaultDocument = SchemaBuilder.instance.getDefaultValue(
       type as SchemaType
     ) as Document;
 
-    const schema = SchemaBuilder.instance.getSchema(type);
-    const builder = new RootBuilder(schema.properties, defaultDocument.data);
-
     runInAction(() => {
       this._currentDocument = defaultDocument;
-      this.registerBuilder(type, builder);
+      this.updateBuilder(defaultDocument);
+    });
+  };
+
+  private updateBuilder = (document: Document) => {
+    const schema = SchemaBuilder.instance.getSchema(document.type);
+    runInAction(() => {
+      this._builder = new RootBuilder(schema.properties, document.data);
     });
   };
 
@@ -262,24 +224,12 @@ class DocumentStore {
       if (!document.data[property.name]) {
         document.data[property.name] = schemaBuilder.getDefaultValue(
           property.type as SchemaType
-        );
+        ) as ObjectValue;
       }
     }
   };
 
-  public set query(q: string) {
-    if (this.searchDebounceTimer) {
-      clearTimeout(this.searchDebounceTimer);
-    }
-
-    this.searchDebounceTimer = setTimeout(() => {
-      runInAction(() => {
-        this.searchQuery = q;
-      });
-    }, 500);
-  }
-
-  private addDocument = (document: Document) => {
+  private addDocument = (document: DocumentPreview) => {
     let index = 0;
 
     for (const doc of this._documents) {

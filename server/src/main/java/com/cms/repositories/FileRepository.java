@@ -1,12 +1,11 @@
 package com.cms.repositories;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -14,9 +13,12 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cms.exceptions.ResourceNotCreatedException;
+import com.cms.exceptions.ResourceNotDeletedException;
 import com.cms.exceptions.ResourceNotFoundException;
+import com.cms.exceptions.UnknownFileException;
 import com.cms.payloads.responses.FileResponse;
-import com.cms.utilities.Constant;
+import com.cms.utilities.Util;
 
 @Repository
 public class FileRepository {
@@ -26,55 +28,66 @@ public class FileRepository {
     this.dataDirectory = dataDirectory;
   }
 
-  public FileResponse find(String fileName) throws MalformedURLException, ResourceNotFoundException {
-    Path filePath = filePath(fileName);
-    URI uri = filePath.toUri();
+  public FileResponse find(String fileName) throws ResourceNotFoundException {
+    try {
+      Path filePath = filePath(fileName);
+      URI uri = filePath.toUri();
 
-    if (uri == null) {
-      throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND);
+      if (uri == null) {
+        throw new ResourceNotFoundException();
+      }
+      Resource resource = new UrlResource(uri);
+
+      if (!resource.exists()) {
+        throw new ResourceNotFoundException();
+      }
+
+      return new FileResponse(resource);
+    } catch (Exception ex) {
+      throw new ResourceNotFoundException();
     }
-    Resource resource = new UrlResource(uri);
-
-    if (!resource.exists()) {
-      throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND);
-    }
-
-    return new FileResponse(resource);
   }
 
-  public String save(MultipartFile file) throws IOException, ResourceNotFoundException {
+  public String save(MultipartFile file)
+      throws ResourceNotCreatedException, UnknownFileException {
     String fileName = fileName(file);
     Path filePath = filePath(fileName);
 
-    Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+    try {
+      Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-    return fileName;
+      return fileName;
+    } catch (Exception ex) {
+      throw new ResourceNotCreatedException();
+    }
   }
 
-  public void delete(String fileName) throws IOException, ResourceNotFoundException {
-    Path filePath = filePath(fileName);
+  public void delete(String fileName) throws ResourceNotDeletedException {
+    try {
+      Path filePath = filePath(fileName);
 
-    Files.delete(filePath);
+      Files.delete(filePath);
+    } catch (Exception ex) {
+      throw new ResourceNotDeletedException();
+    }
   }
 
-  private String fileName(MultipartFile file) {
-    String fileName = String.format("%s-%s", LocalDateTime.now().toLocalDate().hashCode(), file.getOriginalFilename());
+  private String fileName(MultipartFile file) throws UnknownFileException {
+    String originalFileName = Util.firstNonNull("", file.getOriginalFilename());
+    String[] parts = originalFileName.split("\\.");
+    if (parts.length < 2) {
+      throw new UnknownFileException();
+    }
+
+    String mimeType = parts[parts.length - 1];
+    String fileName = String.format("%s%s.%s",
+        LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMuuuuHHmmss")),
+        Util.firstNonNull("", file.getOriginalFilename()).hashCode(), mimeType);
 
     return fileName != null ? fileName : "";
   }
 
-  private Path filePath(String fileName) throws ResourceNotFoundException {
-    try {
-      Path path = Path.of(dataDirectory).resolve(fileName);
-      if (path == null) {
-        throw new ResourceNotFoundException();
-      }
-
-      return path;
-    } catch (Exception ex) {
-      ResourceNotFoundException checkedException = new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND);
-      ex.setStackTrace(ex.getStackTrace());
-      throw checkedException;
-    }
+  private Path filePath(String fileName) {
+    return Path.of(dataDirectory).resolve(fileName);
   }
 }

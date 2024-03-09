@@ -1,12 +1,12 @@
 package com.cms.services;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cms.exceptions.ResourceNotCreatedException;
+import com.cms.exceptions.ResourceNotDeletedException;
 import com.cms.exceptions.ResourceNotFoundException;
+import com.cms.exceptions.UnknownFileException;
 import com.cms.payloads.responses.FileResponse;
 import com.cms.repositories.FileRepository;
 
@@ -18,16 +18,16 @@ public class FileService {
     this.fileRepository = fileRepository;
   }
 
-  public FileResponse find(String fileName) throws MalformedURLException, ResourceNotFoundException {
+  public FileResponse find(String fileName) throws ResourceNotFoundException {
     return fileRepository.find(fileName);
   }
 
   public String save(MultipartFile file)
-      throws IOException, ResourceNotFoundException {
+      throws ResourceNotCreatedException, UnknownFileException {
     return fileRepository.save(file);
   }
 
-  public void delete(String fileName) throws IOException, ResourceNotFoundException {
+  public void delete(String fileName) throws ResourceNotDeletedException {
     fileRepository.delete(fileName);
   }
 }

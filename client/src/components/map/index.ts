@@ -1,9 +1,11 @@
-import { Builder, BuilderConstructorProperties } from "../../types";
+import { Builder, BuilderConstructorProperties } from "@cms/types";
 import { ArrayBuilder } from "../array";
 import { DocumentBuilder } from "../document";
 import { NumberBuilder } from "../number";
 import { ObjectBuilder } from "../object";
 import { StringBuilder } from "../string";
+import { ImageBuilder } from "../image";
+import { FileBuilder } from "../file";
 
 type BuilderClass<T> = new (
   properties: BuilderConstructorProperties<T>
@@ -14,7 +16,9 @@ export const ComponentMap: {
 } = {
   number: NumberBuilder,
   string: StringBuilder,
-  document: DocumentBuilder,
-  object: ObjectBuilder,
+  image: ImageBuilder,
+  file: FileBuilder,
   array: ArrayBuilder,
+  object: ObjectBuilder,
+  document: DocumentBuilder,
 };

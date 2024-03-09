@@ -1,7 +1,7 @@
-import { ArrayValue, Builder, BuilderConstructorProperties } from "../../types";
+import { RootBuilder } from "@cms/layout";
+import { arrayStore } from "@cms/stores";
+import { ArrayValue, Builder, BuilderConstructorProperties } from "@cms/types";
 import { Button } from "../common";
-import { RootBuilder } from "../../layout";
-import { arrayStore } from "../../stores/";
 
 export class ArrayBuilder implements Builder<ArrayValue> {
   public readonly key: string;

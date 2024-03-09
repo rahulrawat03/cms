@@ -25,7 +25,7 @@ public class Document {
   @Column(name = "type", columnDefinition = "VARCHAR(50)")
   private String type;
 
-  @Column(name = "identifier", columnDefinition = "VARCHAR(255) DEFAULT ''")
+  @Column(name = "identifier", columnDefinition = "VARCHAR(255)", nullable = false, unique = true)
   private String identifier;
 
   @Column(name = "data", columnDefinition = "JSONB")

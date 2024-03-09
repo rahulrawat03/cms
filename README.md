@@ -45,3 +45,103 @@ This is an item composed of other schema items providing the flexibility of crea
     ]
   }
 ```
+
+### Primitives
+
+These are the basic types using which complex schema can be created.  
+There are five of these foundation types :
+
+- `string`
+- `number`
+- `image`
+- `file`
+- `array`
+
+# Example
+
+Let's design the schema for a movie information service.
+
+### Movie
+
+Since the service is all about the movies, this will be core entity of our service.
+A movie can have attributes like `title`, `rating`, `genre`, `poster`, `trailer`, `languages`, `country` and many more. Let's concentrate on first five attributes for now.
+
+```js
+  {
+    type: "movie",
+    as: "document",
+    identifier: "title",
+    properties: [
+      {
+        name: "title",
+        type: "string",
+      },
+      {
+        name: "rating",
+        type: "number",
+      },
+      {
+        name: "genre",
+        type: "array",
+      },
+      {
+        name: "poster",
+        type: "image",
+      },
+      {
+        name: "trailer",
+        type: "file"
+      },
+    ],
+  }
+```
+
+The schema defines a `document` of type `movie` and uses all the primitive types offered by the CMS for explanation. Notice that the `genre` is of type `array` since a single movie can belong to multiple genres.
+
+This is how the schema looks right now in the client tool.
+<img src="./assets/movie_document.png" width="600" />
+
+### Actor
+
+Actors are one of the most important attribute of a movie but `actor` entity itself can have much more to it apart from just a name. So, we cannot define an `actor` using one of our primitive types. This is where we make use of `object` to create a schema type specific to our use-case using the foundation types.
+
+```js
+  {
+    type: "actor",
+    as: "object",
+    properties: [
+      {
+        name: "name",
+        type: "string",
+      },
+      {
+        name: "totalMovies",
+        type: "number",
+      },
+      {
+        name: "popularMovies",
+        type: "array"
+      },
+    ],
+  }
+```
+
+Once added in registry, `actor` can be used just like any other type. Let's try adding it to the `movie` document.
+
+```js
+  {
+    type: "movie",
+    as: "document",
+    identifier: "title",
+    properties: [
+      // ... previously added properties,
+      {
+        name: "leadActor",
+        type: "actor",
+      }
+    ],
+  }
+```
+
+We can see the corresponding change on the client.  
+<img src="./assets/movie_document.png" width="600" />

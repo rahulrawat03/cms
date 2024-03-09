@@ -1,5 +1,5 @@
+import { documentStore } from "@cms/stores";
 import { ChangeEvent } from "react";
-import { documentStore } from "../../../../stores";
 import css from "./search.module.css";
 
 export function Search() {

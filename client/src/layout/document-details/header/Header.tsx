@@ -1,6 +1,6 @@
-import { Save } from "./save";
-import css from "./header.module.css";
 import { Delete } from "./delete";
+import css from "./header.module.css";
+import { Save } from "./save";
 
 interface HeaderProps {
   title: string;

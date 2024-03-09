@@ -1,11 +1,11 @@
-import { RootBuilder } from "../../layout";
-import { objectStore } from "../../stores";
+import { RootBuilder } from "@cms/layout";
+import { objectStore } from "@cms/stores";
 import {
   Builder,
   BuilderConstructorProperties,
   ObjectValue,
   Schema,
-} from "../../types";
+} from "@cms/types";
 import { Button } from "../common";
 
 export class ObjectBuilder implements Builder<ObjectValue> {

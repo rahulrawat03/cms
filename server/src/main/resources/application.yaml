@@ -19,6 +19,9 @@ spring:
     multipart:
       max-file-size: -1
       max-request-size: -1
+server:
+  error:
+    include-stacktrace: never
 cors:
   allowed-origins: '*'
-DATA_DIRECTORY: '/data'
+DATA_DIRECTORY: 'C:\Users\rahul.rawat\Downloads'

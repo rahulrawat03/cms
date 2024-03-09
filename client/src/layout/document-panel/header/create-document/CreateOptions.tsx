@@ -1,13 +1,13 @@
+import { Constant } from "@cms/constants";
+import { SchemaBuilder } from "@cms/schema";
 import { Link } from "react-router-dom";
-import { SchemaBuilder } from "../../../../schema";
-import { Constant } from "../../../../constants";
 import css from "./create-document.module.css";
 
 interface CreateOptionsProps {
   onClick: () => void;
 }
 
-export function CreateOptions({ onClick }: CreateOptionsProps) {
+export function CreateOptions({ onClick }: Readonly<CreateOptionsProps>) {
   const documentSchemaTypes = SchemaBuilder.instance.documentSchemaTypes;
 
   return (
@@ -24,7 +24,7 @@ interface OptionProps {
   onClick: () => void;
 }
 
-function Option({ type, onClick }: OptionProps) {
+function Option({ type, onClick }: Readonly<OptionProps>) {
   return (
     <li className={css.createOptionWrapper}>
       <Link

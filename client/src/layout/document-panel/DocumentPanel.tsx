@@ -1,8 +1,8 @@
-import { documentStore } from "../../stores";
-import { useAsyncEffect } from "../../hooks";
-import { Header } from "./header";
+import { useAsyncEffect } from "@cms/hooks";
+import { documentStore } from "@cms/stores";
 import { DocumentList } from "./document-list";
 import css from "./document-panel.module.css";
+import { Header } from "./header";
 
 export function DocumentPanel() {
   useAsyncEffect<void>(documentStore.fetchDocuments, []);

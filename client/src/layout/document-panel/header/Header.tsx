@@ -1,6 +1,6 @@
 import { CreateDocument } from "./create-document";
-import { Search } from "./search";
 import css from "./header.module.css";
+import { Search } from "./search";
 
 export function Header() {
   return (

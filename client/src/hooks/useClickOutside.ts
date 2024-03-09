@@ -1,5 +1,5 @@
 import { RefObject, useEffect } from "react";
-import { Callback } from "../types";
+import { Callback } from "@cms/types";
 
 export function useClickOutside<
   T,

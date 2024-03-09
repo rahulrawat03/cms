@@ -1,0 +1,45 @@
+.container {
+  width: var(--size-part-ninety);
+  margin: var(--value-none) var(--spacing-normal);
+}
+
+.title {
+  display: block;
+  font-size: var(--font-size-small);
+  margin-bottom: var(--spacing-x-small);
+  text-transform: capitalize;
+  font-weight: normal;
+}
+
+.imageGroup {
+  background: var(--color-secondary);
+  border-radius: var(--border-radius-small);
+}
+
+.label {
+  width: var(--size-full);
+  height: var(--size-full);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-normal) var(--value-none);
+}
+
+.image {
+  width: var(--size-huge);
+  height: auto;
+}
+
+.input {
+  display: none;
+}
+
+.empty {
+  width: var(--size-part-ninety);
+  height: var(--size-x-large);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--font-size-small);
+}

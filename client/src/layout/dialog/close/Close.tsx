@@ -1,5 +1,5 @@
 import { X } from "react-feather";
-import { dialogStore } from "../../../stores";
+import { dialogStore } from "@cms/stores";
 import css from "./close.module.css";
 
 export function Close() {

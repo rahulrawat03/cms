@@ -1,4 +1,4 @@
-import { Schema } from "../types";
+import { Schema } from "@cms/types";
 
 export const schemas: Schema[] = [
   {

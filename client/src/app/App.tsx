@@ -1,8 +1,7 @@
+import { DocumentDetails, Layout } from "@cms/layout";
+import { schema } from "@cms/registry";
+import { SchemaBuilder } from "@cms/schema";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Layout } from "../layout/Layout";
-import { DocumentDetails } from "../layout/document-details";
-import { SchemaBuilder } from "../schema";
-import { schema } from "../registry";
 
 export function App() {
   SchemaBuilder.init(schema);

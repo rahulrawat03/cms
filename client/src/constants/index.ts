@@ -1,4 +1,4 @@
-import { SchemaType } from "../types";
+import { SchemaType } from "@cms/types";
 
 export class Constant {
   public static readonly primiteSchemaTypes: Set<string> = new Set([

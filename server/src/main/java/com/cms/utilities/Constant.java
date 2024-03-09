@@ -10,7 +10,9 @@ public class Constant {
 
   public static final @NonNull String SUCCESS = "Success";
 
-  public static final @NonNull String RESOURCE_NOT_SAVED = "Resource could not be saved.";
+  public static final @NonNull String DOCUMENT_ALREADY_EXISTS = "Document with the given identifier already exists.";
+
+  public static final @NonNull String RESOURCE_NOT_CREATED = "Resource could not be created.";
 
   public static final @NonNull String RESOURCE_NOT_FOUND = "Resource could not be found.";
 
@@ -19,4 +21,6 @@ public class Constant {
   public static final @NonNull String RESOURCE_NOT_DELETED = "Resource could not be deleted.";
 
   public static final @NonNull String INTERNAL_SERVER_ERROR = "Internal Server Error";
+
+  public static final @NonNull String UNKNOWN_RESOURCE = "Uploaded file type is unknown.";
 }

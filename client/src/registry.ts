@@ -15,60 +15,23 @@ export const schema: Schema[] = [
       },
       {
         name: "rating",
-        type: "string",
-      },
-      {
-        name: "rentalRate",
         type: "number",
       },
       {
-        name: "criticsReview",
-        type: "critics",
-      },
-      {
-        name: "actors",
-        type: "actor",
-      },
-    ],
-  },
-  {
-    type: "country",
-    as: "document",
-    identifier: "name",
-    properties: [
-      {
-        name: "name",
-        type: "string",
-      },
-      {
-        name: "averageMoviesPerYear",
-        type: "number",
-      },
-      {
-        name: "averageImdbRatingPerMovie",
-        type: "number",
-      },
-      {
-        name: "bigggestSuccesses",
+        name: "genre",
         type: "array",
       },
-    ],
-  },
-  {
-    type: "critics",
-    as: "object",
-    properties: [
       {
-        name: "Critic A",
-        type: "number",
+        name: "poster",
+        type: "image",
       },
       {
-        name: "Critic B",
-        type: "number",
+        name: "trailer",
+        type: "file",
       },
       {
-        name: "Critic C",
-        type: "number",
+        name: "leadActor",
+        type: "actor",
       },
     ],
   },
@@ -77,15 +40,15 @@ export const schema: Schema[] = [
     as: "object",
     properties: [
       {
-        name: "Name",
+        name: "name",
         type: "string",
       },
       {
-        name: "hits",
+        name: "totalMovies",
         type: "number",
       },
       {
-        name: "hitMovies",
+        name: "popularMovies",
         type: "array",
       },
     ],

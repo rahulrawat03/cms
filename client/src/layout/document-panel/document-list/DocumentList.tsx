@@ -1,8 +1,7 @@
 import { observer } from "mobx-react-lite";
-import { DocumentBuilder } from "../../../components";
-import { SchemaBuilder } from "../../../schema";
-import { documentStore } from "../../../stores";
-import { ObjectValue } from "../../../types";
+import { DocumentBuilder } from "@cms/components";
+import { SchemaBuilder } from "@cms/schema";
+import { documentStore } from "@cms/stores";
 import css from "./document-list.module.css";
 
 export const DocumentList = observer(Component);
@@ -10,10 +9,10 @@ export const DocumentList = observer(Component);
 function Component() {
   const documents = documentStore.documents;
   const documentBuilders = documents.map(
-    ({ id, type, data, identifier }) =>
+    ({ id, type, identifier }) =>
       new DocumentBuilder({
         key: id.toString(),
-        value: data as ObjectValue,
+        value: { type },
         name: identifier,
         showName: true,
         schema: SchemaBuilder.instance.getSchema(type),

@@ -3,18 +3,18 @@ package com.cms.services;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cms.exceptions.DocumentAlreadyExistsException;
 import com.cms.exceptions.ResourceNotCreatedException;
 import com.cms.exceptions.ResourceNotDeletedException;
 import com.cms.exceptions.ResourceNotFoundException;
 import com.cms.exceptions.ResourceNotUpdatedException;
 import com.cms.models.Document;
 import com.cms.payloads.requests.DocumentUpdatePayload;
+import com.cms.payloads.responses.DocumentPreview;
 import com.cms.repositories.DocumentRepository;
-import com.cms.utilities.Constant;
 
 @Service
 public class DocumentService {
@@ -24,38 +24,52 @@ public class DocumentService {
     this.documentRepository = documentRepository;
   }
 
-  public List<Document> findAll() {
-    return documentRepository.findAll();
+  public List<DocumentPreview> findAll() {
+    return documentRepository.findAllPreviews();
   }
 
-  public @Nullable Document find(Long id) throws ResourceNotFoundException {
+  public Document find(Long id) throws ResourceNotFoundException {
     Optional<Document> document = documentRepository.findById(id);
 
     if (!document.isPresent()) {
-      throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND);
+      throw new ResourceNotFoundException();
+    }
+
+    return document.get();
+  }
+
+  public Document findByIdentifier(String identifier) throws ResourceNotFoundException {
+    Optional<Document> document = documentRepository.findByIdentifier(identifier);
+
+    if (!document.isPresent()) {
+      throw new ResourceNotFoundException();
     }
 
     return document.get();
   }
 
   @Transactional
-  public @Nullable Long save(Document document) throws ResourceNotCreatedException {
+  public Long save(Document document) throws DocumentAlreadyExistsException, ResourceNotCreatedException {
     try {
+      if (documentRepository.existsByIdentifier(document.getIdentifier())) {
+        throw new DocumentAlreadyExistsException();
+      }
+
       Document savedDocument = documentRepository.save(document);
 
       return savedDocument.getId();
     } catch (IllegalArgumentException ex) {
-      throw new ResourceNotCreatedException(Constant.RESOURCE_NOT_SAVED);
+      throw new ResourceNotCreatedException();
     }
   }
 
   @Transactional
-  public @Nullable Long update(Long id, DocumentUpdatePayload payload)
+  public Long update(Long id, DocumentUpdatePayload payload)
       throws ResourceNotFoundException, ResourceNotUpdatedException {
     Optional<Document> existingDocument = documentRepository.findById(id);
 
     if (!existingDocument.isPresent()) {
-      throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND);
+      throw new ResourceNotFoundException();
     }
 
     existingDocument.get().setData(payload.getData());
@@ -65,23 +79,23 @@ public class DocumentService {
       documentRepository.save(existingDocument.get());
       return id;
     } catch (Exception ex) {
-      throw new ResourceNotUpdatedException(Constant.RESOURCE_NOT_UPDATED);
+      throw new ResourceNotUpdatedException();
     }
   }
 
   @Transactional
-  public @Nullable Long delete(Long id) throws ResourceNotFoundException, ResourceNotDeletedException {
+  public Long delete(Long id) throws ResourceNotFoundException, ResourceNotDeletedException {
     Optional<Document> document = documentRepository.findById(id);
 
     if (!document.isPresent()) {
-      throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND);
+      throw new ResourceNotFoundException();
     }
 
     try {
       documentRepository.deleteById(id);
       return id;
     } catch (Exception ex) {
-      throw new ResourceNotDeletedException(Constant.RESOURCE_NOT_DELETED);
+      throw new ResourceNotDeletedException();
     }
   }
 }

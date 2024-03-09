@@ -1,0 +1,69 @@
+.large {
+  --size: 0.6;
+  --animation-duration: 1.8s;
+}
+
+.medium {
+  --size: 0.4;
+  --animation-duration: 1.2s;
+}
+
+.small {
+  --size: 0.25;
+  --animation-duration: 0.75s;
+}
+
+.wrapper {
+  width: var(--size-full);
+  height: var(--size-full);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: var(--size-huge);
+  height: var(--size-huge);
+  position: relative;
+  animation: rotation var(--animation-duration) linear infinite;
+}
+
+.circleLarge,
+.circleMedium,
+.circleSmall {
+  position: absolute;
+  border-radius: var(--border-radius-full);
+  background: var(--color-primary);
+  border: var(--thickness-normal) solid var(--color-secondary);
+}
+
+.circleLarge {
+  width: var(--size-normal);
+  height: var(--size-normal);
+  top: var(--value-none);
+  left: var(--spacing-huge);
+}
+
+.circleMedium {
+  width: var(--size-small);
+  height: var(--size-small);
+  top: var(--spacing-large);
+  left: var(--spacing-large);
+}
+
+.circleSmall {
+  width: var(--size-x-small);
+  height: var(--size-x-small);
+  top: var(--spacing-huge);
+  left: var(--spacing-x-small);
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0) scale(var(--size));
+  }
+
+  to {
+    transform: rotate(360deg) scale(var(--size));
+  }
+}

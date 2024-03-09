@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AsyncCallback, Callback } from "../types";
+import { AsyncCallback, Callback } from "@cms/types";
 
 export function useAsyncEffect<T>(
   cb: AsyncCallback<T>,

@@ -1,6 +1,7 @@
+import { RootBuilder } from "@cms/layout";
+import { Builder, Callback, Value } from "@cms/types";
 import { runInAction } from "mobx";
-import { RootBuilder } from "../../layout";
-import { Builder, Callback, Value } from "../../types";
+
 import { dialogStore } from "./base";
 import { LayerType } from "./types";
 

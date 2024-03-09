@@ -2,8 +2,8 @@ package com.cms.utilities;
 
 import org.springframework.lang.NonNull;
 
-public class Helper {
-  private Helper() {
+public class Util {
+  private Util() {
   }
 
   @SafeVarargs

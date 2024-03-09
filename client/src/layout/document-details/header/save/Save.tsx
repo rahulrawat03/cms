@@ -1,7 +1,7 @@
+import { Constant } from "@cms/constants";
+import { documentStore } from "@cms/stores";
+import { cls } from "@cms/utils";
 import { useNavigate, useParams } from "react-router-dom";
-import { Constant } from "../../../../constants";
-import { documentStore } from "../../../../stores";
-import { cls } from "../../../../utils";
 import btnCss from "../header.module.css";
 import css from "./save.module.css";
 
@@ -11,7 +11,7 @@ export function Save() {
 
   const handleClick = async () => {
     if (id === Constant.DRAFT) {
-      const { id, type } = (await documentStore.createDocument()) || {};
+      const { id, type } = (await documentStore.createDocument()) ?? {};
 
       if (id && type) {
         navigate(`/${type}/${id}`, { replace: true });

@@ -1,6 +1,6 @@
-import { ComponentMap } from "../../../components";
-import { SchemaBuilder } from "../../../schema";
-import { arrayStore } from "../../../stores";
+import { ComponentMap } from "@cms/components";
+import { SchemaBuilder } from "@cms/schema";
+import { arrayStore } from "@cms/stores";
 import css from "./options.module.css";
 
 export function Options() {

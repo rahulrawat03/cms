@@ -1,5 +1,5 @@
+import { Builder, BuilderConstructorProperties } from "@cms/types";
 import { Input } from "../common";
-import { Builder, BuilderConstructorProperties } from "../../types";
 
 export class StringBuilder implements Builder<string> {
   public readonly key: string;

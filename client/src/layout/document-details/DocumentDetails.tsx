@@ -1,9 +1,11 @@
+import { Constant } from "@cms/constants";
+import { useAsyncEffect } from "@cms/hooks";
+import { documentStore } from "@cms/stores";
 import { useParams } from "react-router-dom";
-import { Constant } from "../../constants";
-import { useAsyncEffect } from "../../hooks";
-import { documentStore } from "../../stores";
 import { DetailsSection } from "./DetailsSection";
 import css from "./document-details.module.css";
+import { Loader } from "@cms/components";
+import { LoaderVariant } from "@cms/components/common/loader/types";
 
 export function DocumentDetails() {
   const { id, type } = useParams();
@@ -16,9 +18,13 @@ export function DocumentDetails() {
     }
   }, [id, type]);
 
-  if (!(id && type && !loading && !documentStore.loadingDocuments)) {
-    return <div className={css.documentDetails} />;
+  if (!(id && type && !loading)) {
+    return (
+      <div className={css.documentDetails}>
+        <Loader variant={LoaderVariant.LARGE} />
+      </div>
+    );
   }
 
-  return <DetailsSection id={id} type={type} />;
+  return <DetailsSection type={type} />;
 }

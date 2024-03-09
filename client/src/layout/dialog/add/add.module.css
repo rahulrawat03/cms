@@ -10,11 +10,13 @@
 
 .addButton {
   background: var(--color-tertiary);
+  border: var(--thickness-small) solid var(--color-primary);
+  box-shadow: var(--spacing-x-small) var(--spacing-x-small)
+    var(--spacing-x-small) var(--color-secondary);
   padding: var(--spacing-small);
   border-radius: var(--border-radius-small);
   width: var(--size-x-large);
   outline: none;
-  border: none;
   cursor: pointer;
   font-size: var(--font-size-x-small);
   text-transform: uppercase;

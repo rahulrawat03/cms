@@ -1,6 +1,5 @@
-import { ReactElement } from "react";
-import { ComponentMap, Spacer } from "../../components";
-import { SchemaBuilder } from "../../schema";
+import { ComponentMap, Spacer } from "@cms/components";
+import { SchemaBuilder } from "@cms/schema";
 import {
   ArrayValue,
   Builder,
@@ -8,7 +7,8 @@ import {
   Property,
   Schema,
   Value,
-} from "../../types";
+} from "@cms/types";
+import { ReactElement } from "react";
 
 interface RootBuilderItem {
   key: string;
@@ -116,8 +116,7 @@ export class RootBuilder implements Builder<ArrayValue | ObjectValue> {
   };
 
   public value = () => {
-    const value = this.isArrayType ? this.arrayValue() : this.objectValue();
-    return value;
+    return this.isArrayType ? this.arrayValue() : this.objectValue();
   };
 
   private objectValue = () => {

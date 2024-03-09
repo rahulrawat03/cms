@@ -1,6 +1,6 @@
+import { cls } from "@cms/utils";
 import { useState } from "react";
 import { X } from "react-feather";
-import { cls } from "../../../../utils";
 import { CreateOptions } from "./CreateOptions";
 import css from "./create-document.module.css";
 

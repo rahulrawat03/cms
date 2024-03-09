@@ -83,10 +83,10 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-secondary-soft);
+  background: var(--color-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-secondary);
+  background: var(--color-tertiary);
   border-radius: var(--border-radius-small);
 }
