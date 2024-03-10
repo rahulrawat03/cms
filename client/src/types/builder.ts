@@ -1,6 +1,4 @@
 import { ReactElement } from "react";
-import { Schema } from "./schema";
-import { Value } from "./document";
 
 export interface Builder<T> {
   key: string;
@@ -10,11 +8,10 @@ export interface Builder<T> {
   value(): T;
 }
 
-export interface BuilderConstructorProperties<T> {
+export interface BuilderConstructorProperties<U, V> {
   key: string;
-  value: T;
+  value: U;
   name: string;
-  schema: Schema;
+  schema: V;
   showName: boolean;
-  parent?: Value;
 }

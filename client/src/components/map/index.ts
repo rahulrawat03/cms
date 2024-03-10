@@ -8,12 +8,13 @@ import { ImageBuilder } from "../image";
 import { FileBuilder } from "../file";
 import { UnknownBuilder } from "../unknown";
 
-type BuilderClass<T> = new (
-  properties: BuilderConstructorProperties<T>
-) => Builder<T>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type BuilderClass<U = any, V = any> = new (
+  properties: BuilderConstructorProperties<U, V>
+) => Builder<U>;
 
 export const ComponentMap: {
-  [key: string]: BuilderClass<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  [key: string]: BuilderClass;
 } = {
   number: NumberBuilder,
   string: StringBuilder,

@@ -28,11 +28,6 @@ export async function api<T>(
     body: cleanBody,
   });
 
-  // let data: T;
-  // if (isMultipartRequest) {
-  //   data = await response.text();
-  // } else {
-  // }
   const data = await response.json();
 
   if (!response.ok) {

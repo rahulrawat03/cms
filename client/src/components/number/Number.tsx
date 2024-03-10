@@ -12,7 +12,7 @@ export class NumberBuilder implements Builder<number> {
     value,
     name,
     showName,
-  }: BuilderConstructorProperties<number>) {
+  }: BuilderConstructorProperties<number, void>) {
     this.key = `${key}-${crypto.randomUUID()}`;
     this._value = value;
     this.name = name;

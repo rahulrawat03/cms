@@ -1,6 +1,11 @@
 import { RootArrayBuilder, RootBuilder } from "@cms/layout";
 import { arrayStore } from "@cms/stores";
-import { ArrayValue, Builder, BuilderConstructorProperties } from "@cms/types";
+import {
+  ArraySchema,
+  ArrayValue,
+  Builder,
+  BuilderConstructorProperties,
+} from "@cms/types";
 import { Button } from "../common";
 
 export class ArrayBuilder implements Builder<ArrayValue> {
@@ -15,14 +20,15 @@ export class ArrayBuilder implements Builder<ArrayValue> {
     key,
     value,
     name,
+    schema,
     showName,
-  }: BuilderConstructorProperties<ArrayValue>) {
+  }: BuilderConstructorProperties<ArrayValue, ArraySchema>) {
     this.key = key;
     this._value = value;
     this.name = name;
     this.showName = showName;
 
-    this.builder = new RootArrayBuilder([], this._value);
+    this.builder = new RootArrayBuilder(schema, this._value);
   }
 
   private handleClick() {
@@ -44,7 +50,7 @@ export class ArrayBuilder implements Builder<ArrayValue> {
   }
 
   public update() {
-    this._value.length = 0;
-    this._value.push(...this.builder.value());
+    this._value.values.length = 0;
+    this._value.values.push(...this.builder.value().values);
   }
 }

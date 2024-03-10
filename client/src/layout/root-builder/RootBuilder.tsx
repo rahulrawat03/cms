@@ -1,19 +1,17 @@
-import { Builder, Property, Value } from "@cms/types";
+import { ComponentMap, Spacer } from "@cms/components";
+import { Builder, Schema, Value } from "@cms/types";
 import { ReactElement } from "react";
 import { RootBuilderItem } from "./types";
-import { ComponentMap, Spacer } from "@cms/components";
 
 export abstract class RootBuilder<T> implements Builder<T> {
   public readonly key: string;
+  public readonly type: string;
+
   public builders: { key: string; builder: Builder<Value> }[] = [];
 
-  constructor(
-    protected properties: Property[],
-    protected data: T,
-    showName: boolean,
-    key?: string
-  ) {
-    this.key = key ?? crypto.randomUUID();
+  constructor(protected schema: Schema, protected data: T, showName: boolean) {
+    this.key = crypto.randomUUID();
+    this.type = schema.type;
 
     const items = this.items();
     this.builders = items.map((item) => ({

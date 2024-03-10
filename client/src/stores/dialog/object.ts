@@ -1,5 +1,5 @@
-import { Callback, ObjectValue } from "../../types";
-import { RootBuilder } from "../../layout";
+import { RootBuilder } from "@cms/layout";
+import { Callback, ObjectValue } from "@cms/types";
 import { dialogStore } from "./base";
 import { LayerType } from "./types";
 

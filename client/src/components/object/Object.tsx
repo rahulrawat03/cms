@@ -3,6 +3,7 @@ import { objectStore } from "@cms/stores";
 import {
   Builder,
   BuilderConstructorProperties,
+  ObjectSchema,
   ObjectValue,
   Schema,
 } from "@cms/types";
@@ -23,14 +24,14 @@ export class ObjectBuilder implements Builder<ObjectValue> {
     name,
     schema,
     showName,
-  }: BuilderConstructorProperties<ObjectValue>) {
+  }: BuilderConstructorProperties<ObjectValue, ObjectSchema>) {
     this.key = key;
     this._value = value;
     this.name = name;
     this.schema = schema;
     this.showName = showName;
 
-    this.builder = new RootObjectBuilder(schema.properties, this._value);
+    this.builder = new RootObjectBuilder(schema, this._value);
   }
 
   private handleClick() {

@@ -5,7 +5,7 @@ export class UnknownBuilder implements Builder<TypedObject> {
   public readonly key: string;
   private _value: TypedObject;
 
-  constructor({ key, value }: BuilderConstructorProperties<TypedObject>) {
+  constructor({ key, value }: BuilderConstructorProperties<TypedObject, void>) {
     this.key = `${key}-${crypto.randomUUID()}`;
     this._value = value;
   }

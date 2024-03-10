@@ -1,7 +1,7 @@
 import { RootBuilder } from "@cms/layout";
+import { SchemaBuilder } from "@cms/schema";
 import { ArrayValue, Builder, Callback } from "@cms/types";
 import { runInAction } from "mobx";
-
 import { dialogStore } from "./base";
 import { LayerType } from "./types";
 
@@ -21,6 +21,16 @@ class ArrayStore {
         dialogStore.trigger = !dialogStore.trigger;
       });
     }
+  }
+
+  public get options() {
+    const type = dialogStore.current?.builder.type;
+    if (type) {
+      const schema = SchemaBuilder.instance.getSchema(type);
+      return schema.allowedTypes ?? [];
+    }
+
+    return [];
   }
 
   public addBuilder(key: string, builder: Builder<ArrayValue>) {

@@ -1,14 +1,10 @@
-import {
-  Builder,
-  BuilderConstructorProperties,
-  File as CmsFile,
-} from "@cms/types";
+import { Builder, BuilderConstructorProperties, Resource } from "@cms/types";
 import { File } from "@cms/components";
 import { fileStore } from "@cms/stores/file";
 
-export class FileBuilder implements Builder<CmsFile> {
+export class FileBuilder implements Builder<Resource> {
   public readonly key: string;
-  private _value: CmsFile;
+  private _value: Resource;
   private name: string;
   private showName: boolean;
 
@@ -17,7 +13,7 @@ export class FileBuilder implements Builder<CmsFile> {
     value,
     name,
     showName,
-  }: BuilderConstructorProperties<CmsFile>) {
+  }: BuilderConstructorProperties<Resource, void>) {
     this.key = `${key}-${crypto.randomUUID()}`;
     this._value = value;
     this.name = name;

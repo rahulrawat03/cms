@@ -1,14 +1,10 @@
-import {
-  Builder,
-  BuilderConstructorProperties,
-  File as CmsFile,
-} from "@cms/types";
+import { Builder, BuilderConstructorProperties, Resource } from "@cms/types";
 import { Image } from "@cms/components";
 import { fileStore } from "@cms/stores";
 
-export class ImageBuilder implements Builder<CmsFile> {
+export class ImageBuilder implements Builder<Resource> {
   public readonly key: string;
-  private _value: CmsFile;
+  private _value: Resource;
   private name: string;
   private showName: boolean;
 
@@ -17,7 +13,7 @@ export class ImageBuilder implements Builder<CmsFile> {
     value,
     name,
     showName,
-  }: BuilderConstructorProperties<CmsFile>) {
+  }: BuilderConstructorProperties<Resource, void>) {
     this.key = `${key}-${crypto.randomUUID()}`;
     this._value = value;
     this.name = name;
@@ -27,7 +23,10 @@ export class ImageBuilder implements Builder<CmsFile> {
   private async handleChange(image: File) {
     const imageId = await fileStore.update(image, this._value.value);
 
-    this._value.value = imageId;
+    if (imageId !== this._value.value) {
+      this._value.name = image.name;
+      this._value.value = imageId;
+    }
   }
 
   public build() {

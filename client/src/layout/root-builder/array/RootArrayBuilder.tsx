@@ -1,5 +1,5 @@
 import { SchemaBuilder } from "@cms/schema";
-import { ArrayValue, Property } from "@cms/types";
+import { ArrayValue, Schema } from "@cms/types";
 import { ReactElement } from "react";
 import { RootBuilder } from "../RootBuilder";
 import { RootBuilderItem } from "../types";
@@ -7,15 +7,15 @@ import { Delete } from "./Delete";
 import css from "./array.module.css";
 
 export class RootArrayBuilder extends RootBuilder<ArrayValue> {
-  constructor(properties: Property[], data: ArrayValue, key?: string) {
-    super(properties, data, false, key);
+  constructor(schema: Schema, data: ArrayValue) {
+    super(schema, data, false);
   }
 
   protected items() {
     const schemaBuilder = SchemaBuilder.instance;
 
-    const items: RootBuilderItem[] = this.data.map((value, index) => {
-      const parentSchemaType = schemaBuilder.inferParentSchemaType(value);
+    const items: RootBuilderItem[] = this.data.values.map((value, index) => {
+      const parentSchemaType = schemaBuilder.inferWrapperSchemaType(value);
       const schemaType = schemaBuilder.inferSchemaType(value);
       const schema = schemaBuilder.getSchema(schemaType);
 
@@ -44,6 +44,9 @@ export class RootArrayBuilder extends RootBuilder<ArrayValue> {
   }
 
   public value(): ArrayValue {
-    return this.builders.map(({ builder }) => builder.value());
+    return {
+      type: this.schema.type,
+      values: this.builders.map(({ builder }) => builder.value()),
+    };
   }
 }

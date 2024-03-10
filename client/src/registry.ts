@@ -18,10 +18,6 @@ export const schema: Schema[] = [
         type: "number",
       },
       {
-        name: "genre",
-        type: "array",
-      },
-      {
         name: "poster",
         type: "image",
       },
@@ -30,10 +26,19 @@ export const schema: Schema[] = [
         type: "file",
       },
       {
-        name: "leadActor",
-        type: "actor",
+        name: "genre",
+        type: "genre",
+      },
+      {
+        name: "actors",
+        type: "actors",
       },
     ],
+  },
+  {
+    type: "genre",
+    as: "array",
+    allowedTypes: ["string"],
   },
   {
     type: "actor",
@@ -48,10 +53,14 @@ export const schema: Schema[] = [
         type: "number",
       },
       {
-        name: "popularMovies",
-        type: "array",
+        name: "photo",
+        type: "image",
       },
     ],
-    identifier: "name",
+  },
+  {
+    type: "actors",
+    as: "array",
+    allowedTypes: ["actor"],
   },
 ];

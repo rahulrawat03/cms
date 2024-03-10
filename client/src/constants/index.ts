@@ -6,7 +6,6 @@ export class Constant {
     SchemaType.STRING,
     SchemaType.IMAGE,
     SchemaType.FILE,
-    SchemaType.ARRAY,
   ]);
 
   public static readonly httpHeaders = {

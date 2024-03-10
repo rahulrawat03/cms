@@ -1,7 +1,7 @@
-import { observer } from "mobx-react-lite";
 import { DocumentBuilder } from "@cms/components";
 import { SchemaBuilder } from "@cms/schema";
 import { documentStore } from "@cms/stores";
+import { observer } from "mobx-react-lite";
 import css from "./document-list.module.css";
 
 export const DocumentList = observer(Component);

@@ -7,8 +7,6 @@ import {
 } from "mobx";
 import { Layer } from "./types";
 
-export * from "./types";
-
 class DialogStore {
   public static readonly instance = new DialogStore();
 

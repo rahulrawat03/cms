@@ -1,6 +1,12 @@
 import { RootBuilder, RootObjectBuilder } from "@cms/layout";
 import { SchemaBuilder } from "@cms/schema";
-import { Document, DocumentPreview, ObjectValue, SchemaType } from "@cms/types";
+import {
+  Document,
+  DocumentPreview,
+  ObjectValue,
+  SchemaType,
+  Value,
+} from "@cms/types";
 import { api } from "@cms/utils";
 import {
   action,
@@ -108,7 +114,7 @@ class DocumentStore {
 
       const document = await api<Document>(`${this.endpoint}/${id}`);
 
-      this.populateEmptyProperties(document);
+      this.populateEmptyProperties(document.type, document.data);
 
       runInAction(() => {
         this._currentDocument = document;
@@ -208,7 +214,7 @@ class DocumentStore {
 
   // UTILITIES ======================================================
 
-  public async createDraft(type: string) {
+  public createDraft(type: string) {
     const defaultDocument = SchemaBuilder.instance.getDefaultValue(
       type as SchemaType
     ) as Document;
@@ -219,28 +225,35 @@ class DocumentStore {
     });
   }
 
-  private async updateBuilder(document: Document) {
+  private updateBuilder(document: Document) {
     const schema = SchemaBuilder.instance.getSchema(document.type);
 
     runInAction(() => {
-      this._builder = new RootObjectBuilder(schema.properties, document.data);
+      this._builder = new RootObjectBuilder(schema, document.data);
     });
   }
 
-  private async populateEmptyProperties(document: Document) {
+  private populateEmptyProperties(type: string, data: ObjectValue) {
     const schemaBuilder = SchemaBuilder.instance;
-    const schema = schemaBuilder.getSchema(document.type);
+    const properties = schemaBuilder.getSchema(type).properties ?? [];
 
-    for (const property of schema.properties) {
-      if (!document.data[property.name]) {
-        document.data[property.name] = schemaBuilder.getDefaultValue(
+    for (const property of properties) {
+      const schemaType = schemaBuilder.getWrapperSchemaType(property.type);
+
+      if (!data[property.name]) {
+        data[property.name] = schemaBuilder.getDefaultValue(
           property.type as SchemaType
-        ) as ObjectValue;
+        ) as Value;
+      } else if (schemaBuilder.isObjectType(schemaType)) {
+        this.populateEmptyProperties(
+          property.type,
+          data[property.name]! as ObjectValue
+        );
       }
     }
   }
 
-  private async addDocument(document: DocumentPreview) {
+  private addDocument(document: DocumentPreview) {
     let index = 0;
 
     for (const doc of this._documents) {

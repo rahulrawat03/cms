@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import { DocumentPanel } from "./document-panel";
 import { Dialog } from "./dialog";
+import { DocumentPanel } from "./document-panel";
 import css from "./layout.module.css";
 
 export function Layout() {

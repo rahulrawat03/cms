@@ -4,11 +4,9 @@ import { arrayStore } from "@cms/stores";
 import css from "./options.module.css";
 
 export function Options() {
-  const schemaTypes = SchemaBuilder.instance.schemaTypes;
-
   return (
     <div className={css.options}>
-      {schemaTypes.map((type) => (
+      {arrayStore.options.map((type) => (
         <Option key={type} type={type} />
       ))}
     </div>
@@ -22,7 +20,7 @@ interface OptionProps {
 function Option({ type }: Readonly<OptionProps>) {
   const schemaBuilder = SchemaBuilder.instance;
 
-  const parentSchemaType = schemaBuilder.getParentSchemaType(type);
+  const parentSchemaType = schemaBuilder.getWrapperSchemaType(type);
   const schema = schemaBuilder.getSchema(type);
   const defaultValue = schemaBuilder.getDefaultValue(type);
 

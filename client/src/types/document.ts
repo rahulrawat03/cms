@@ -12,15 +12,16 @@ export interface Document {
   createdAt: string;
 }
 
-export interface File {
+export interface Resource {
   type: "file" | "image";
   name: string;
   value: string;
 }
 
-export type Value = number | string | boolean | File | ArrayValue | ObjectValue;
-
-export type ArrayValue = Value[];
+export type ArrayValue = {
+  type: string;
+  values: Value[];
+};
 
 export type ObjectValue = {
   [key: string]: Value;
@@ -29,3 +30,11 @@ export type ObjectValue = {
 export type TypedObject = ObjectValue & {
   type: string;
 };
+
+export type Value =
+  | number
+  | string
+  | boolean
+  | Resource
+  | ArrayValue
+  | ObjectValue;

@@ -3,7 +3,7 @@ import {
   Builder,
   BuilderConstructorProperties,
   ObjectValue,
-  Schema,
+  DocumentSchema,
 } from "@cms/types";
 import { ChevronRight } from "react-feather";
 import { Link } from "react-router-dom";
@@ -13,14 +13,14 @@ export class DocumentBuilder implements Builder<ObjectValue> {
   public readonly key: string;
   private name: string;
   private _value: ObjectValue;
-  private schema: Schema;
+  private schema: DocumentSchema;
 
   constructor({
     key,
     name,
     value,
     schema,
-  }: BuilderConstructorProperties<ObjectValue>) {
+  }: BuilderConstructorProperties<ObjectValue, DocumentSchema>) {
     this.key = key;
     this.name = name;
     this._value = value;

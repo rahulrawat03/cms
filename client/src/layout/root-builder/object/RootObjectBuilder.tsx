@@ -1,28 +1,30 @@
 import { SchemaBuilder } from "@cms/schema";
-import { ObjectValue, Property } from "@cms/types";
+import { ObjectValue, Schema } from "@cms/types";
 import { ReactElement } from "react";
 import { RootBuilder } from "../RootBuilder";
 import { RootBuilderItem } from "../types";
 
 export class RootObjectBuilder extends RootBuilder<ObjectValue> {
-  constructor(properties: Property[], data: ObjectValue, key?: string) {
-    super(properties, data, true, key);
+  constructor(schema: Schema, data: ObjectValue) {
+    super(schema, data, true);
   }
 
   protected items() {
     const schemaBuilder = SchemaBuilder.instance;
 
-    const items: RootBuilderItem[] = this.properties.map(({ name, type }) => {
-      const parentSchemaType = schemaBuilder.getParentSchemaType(type);
-      const schema = schemaBuilder.getSchema(type);
+    const items: RootBuilderItem[] = (this.schema.properties ?? []).map(
+      ({ name, type }) => {
+        const parentSchemaType = schemaBuilder.getWrapperSchemaType(type);
+        const schema = schemaBuilder.getSchema(type);
 
-      return {
-        key: name,
-        type: parentSchemaType,
-        schema,
-        value: this.data?.[name],
-      };
-    });
+        return {
+          key: name,
+          type: parentSchemaType,
+          schema,
+          value: this.data?.[name],
+        };
+      }
+    );
 
     return items;
   }

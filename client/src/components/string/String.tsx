@@ -12,7 +12,7 @@ export class StringBuilder implements Builder<string> {
     value,
     name,
     showName,
-  }: BuilderConstructorProperties<string>) {
+  }: BuilderConstructorProperties<string, void>) {
     this.key = `${key}-${crypto.randomUUID()}`;
     this._value = value;
     this.name = name;
