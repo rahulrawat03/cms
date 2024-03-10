@@ -1,5 +1,5 @@
 import { RootBuilder } from "@cms/layout";
-import { Callback } from "@cms/types";
+import { ArrayValue, Callback, ObjectValue } from "@cms/types";
 
 export enum LayerType {
   ARRAY,
@@ -7,7 +7,7 @@ export enum LayerType {
 }
 
 export interface Layer {
-  builder: RootBuilder;
+  builder: RootBuilder<ArrayValue | ObjectValue>;
   update: Callback<void>;
   type: LayerType;
 }

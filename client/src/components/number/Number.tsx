@@ -19,7 +19,7 @@ export class NumberBuilder implements Builder<number> {
     this.showName = showName;
   }
 
-  public build = () => {
+  public build() {
     return (
       <Input
         key={this.key}
@@ -31,9 +31,9 @@ export class NumberBuilder implements Builder<number> {
         setValue={(value) => (this._value = value as number)}
       />
     );
-  };
+  }
 
-  public value = () => {
+  public value() {
     return this._value;
-  };
+  }
 }

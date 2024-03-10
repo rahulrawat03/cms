@@ -1,4 +1,4 @@
-import { RootBuilder } from "@cms/layout";
+import { RootBuilder, RootObjectBuilder } from "@cms/layout";
 import { SchemaBuilder } from "@cms/schema";
 import { Document, DocumentPreview, ObjectValue, SchemaType } from "@cms/types";
 import { api } from "@cms/utils";
@@ -9,28 +9,31 @@ import {
   observable,
   runInAction,
 } from "mobx";
-
-import { SearchStore } from "./search";
+import { searchStore } from "./search";
 
 class DocumentStore {
+  public static readonly instance = new DocumentStore();
+
   private endpoint: string = "/document";
 
-  public _builder: RootBuilder | null = null;
+  private _builder: RootBuilder<ObjectValue> | null = null;
 
   private _documents: DocumentPreview[] = [];
 
   private _currentDocument: Document | null = null;
 
-  private searchStore: SearchStore;
-
   private searchQuery: string = "";
 
   private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
-  constructor() {
+  private constructor() {
     makeObservable<
       DocumentStore,
-      "_documents" | "_currentDocument" | "_builder" | "searchQuery"
+      | "_documents"
+      | "_currentDocument"
+      | "_builder"
+      | "searchQuery"
+      | "updateBuilder"
     >(this, {
       _documents: observable,
       _currentDocument: observable,
@@ -38,12 +41,11 @@ class DocumentStore {
       searchQuery: observable,
       fetchDocument: action,
       fetchDocuments: action,
+      updateDocument: action,
+      updateBuilder: action,
       documents: computed,
       currentDocument: computed,
-      updateDocument: action,
     });
-
-    this.searchStore = new SearchStore();
   }
 
   // Getters & Setters ==============================================
@@ -53,14 +55,14 @@ class DocumentStore {
       return this._documents;
     }
 
-    return this.searchStore.getDocuments(this.searchQuery);
+    return searchStore.getDocuments(this.searchQuery);
   }
 
   public get currentDocument(): Document | null {
     return this._currentDocument;
   }
 
-  public get builder(): RootBuilder | null {
+  public get builder(): RootBuilder<ObjectValue> | null {
     return this._builder;
   }
 
@@ -78,7 +80,7 @@ class DocumentStore {
 
   // CRUD ===========================================================
 
-  public fetchDocuments = async () => {
+  public async fetchDocuments() {
     if (this._documents.length > 0) {
       return;
     }
@@ -89,14 +91,14 @@ class DocumentStore {
       runInAction(() => {
         documents.sort((a, b) => a.identifier.localeCompare(b.identifier));
         this._documents = documents;
-        this.searchStore.init(documents);
+        searchStore.init(documents);
       });
     } catch (ex: unknown) {
       // pass
     }
-  };
+  }
 
-  public fetchDocument = async (id: string) => {
+  public async fetchDocument(id: string) {
     try {
       if (!id) {
         return;
@@ -115,36 +117,44 @@ class DocumentStore {
     } catch (ex: unknown) {
       // pass
     }
-  };
+  }
 
-  public updateDocument = async () => {
+  public async updateDocument() {
     if (!(this._currentDocument && this._builder)) {
       return;
     }
 
     try {
       const { id, type } = this._currentDocument;
-      const data = this._builder.value() as ObjectValue;
+      const data = this._builder.value();
       const identifierName =
         SchemaBuilder.instance.getSchema(type).identifier ?? "";
+      const identifier = data[identifierName] as string;
 
       await api<void>(`${this.endpoint}/${id}`, "PUT", {
         data,
-        identifier: data[identifierName],
+        identifier,
+      });
+
+      runInAction(() => {
+        const document = this._documents.find((document) => document.id === id);
+        if (document) {
+          document.identifier = identifier;
+        }
       });
     } catch (ex: unknown) {
       // pass
     }
-  };
+  }
 
-  public createDocument = async () => {
+  public async createDocument() {
     if (!(this._currentDocument && this._builder)) {
       return;
     }
 
     try {
       const { type } = this._currentDocument;
-      const data = this._builder.value() as ObjectValue;
+      const data = this._builder.value();
       const identifierName =
         SchemaBuilder.instance.getSchema(type).identifier ?? "";
       const identifier = (data?.[identifierName] ?? "") as string;
@@ -167,9 +177,9 @@ class DocumentStore {
     } catch (ex: unknown) {
       // pass
     }
-  };
+  }
 
-  public deleteDocument = async () => {
+  public async deleteDocument() {
     if (!this._currentDocument) {
       return;
     }
@@ -194,11 +204,11 @@ class DocumentStore {
     } catch (ex: unknown) {
       // pass
     }
-  };
+  }
 
   // UTILITIES ======================================================
 
-  public createDraft = (type: string) => {
+  public async createDraft(type: string) {
     const defaultDocument = SchemaBuilder.instance.getDefaultValue(
       type as SchemaType
     ) as Document;
@@ -207,16 +217,17 @@ class DocumentStore {
       this._currentDocument = defaultDocument;
       this.updateBuilder(defaultDocument);
     });
-  };
+  }
 
-  private updateBuilder = (document: Document) => {
+  private async updateBuilder(document: Document) {
     const schema = SchemaBuilder.instance.getSchema(document.type);
-    runInAction(() => {
-      this._builder = new RootBuilder(schema.properties, document.data);
-    });
-  };
 
-  private populateEmptyProperties = (document: Document) => {
+    runInAction(() => {
+      this._builder = new RootObjectBuilder(schema.properties, document.data);
+    });
+  }
+
+  private async populateEmptyProperties(document: Document) {
     const schemaBuilder = SchemaBuilder.instance;
     const schema = schemaBuilder.getSchema(document.type);
 
@@ -227,9 +238,9 @@ class DocumentStore {
         ) as ObjectValue;
       }
     }
-  };
+  }
 
-  private addDocument = (document: DocumentPreview) => {
+  private async addDocument(document: DocumentPreview) {
     let index = 0;
 
     for (const doc of this._documents) {
@@ -242,9 +253,9 @@ class DocumentStore {
 
     runInAction(() => {
       this._documents.splice(index, 0, document);
-      this.searchStore.addDocument(document);
+      searchStore.addDocument(document);
     });
-  };
+  }
 }
 
-export const documentStore = new DocumentStore();
+export const documentStore = DocumentStore.instance;

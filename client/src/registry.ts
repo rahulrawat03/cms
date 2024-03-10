@@ -52,5 +52,6 @@ export const schema: Schema[] = [
         type: "array",
       },
     ],
+    identifier: "name",
   },
 ];

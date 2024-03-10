@@ -8,6 +8,7 @@ export interface Schema {
   as: "document" | "object";
   properties: Property[];
   identifier?: string;
+  allowedTypes?: string[];
 }
 
 export enum SchemaType {
@@ -19,4 +20,5 @@ export enum SchemaType {
   ARRAY = "array",
   DOCUMENT = "document",
   PRIMITIVE = "primitive",
+  UNKNOWN = "unknown",
 }

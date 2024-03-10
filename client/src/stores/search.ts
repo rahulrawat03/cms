@@ -8,21 +8,23 @@ class Node {
   ) {}
 }
 
-export class SearchStore {
+class SearchStore {
+  public static readonly instance = new SearchStore();
+
   private root: Node;
 
-  constructor() {
+  private constructor() {
     this.root = new Node();
   }
 
   public init(documents: DocumentPreview[]) {
     this.root = new Node();
 
-    documents.forEach(this.addDocument);
+    documents.forEach(this.addDocument.bind(this));
   }
 
-  public addDocument = (document: DocumentPreview) => {
-    const identifier = document.identifier;
+  public addDocument(document: DocumentPreview) {
+    const identifier = document.identifier.toLowerCase();
 
     let node = this.root;
     let index = 0;
@@ -38,9 +40,11 @@ export class SearchStore {
     }
 
     node.documents.push(document);
-  };
+  }
 
   public getDocuments(query: string) {
+    query = query.toLowerCase();
+
     let node = this.root;
     let index = 0;
 
@@ -68,3 +72,5 @@ export class SearchStore {
     return documents;
   }
 }
+
+export const searchStore = SearchStore.instance;

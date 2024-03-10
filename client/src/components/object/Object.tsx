@@ -1,4 +1,4 @@
-import { RootBuilder } from "@cms/layout";
+import { RootBuilder, RootObjectBuilder } from "@cms/layout";
 import { objectStore } from "@cms/stores";
 import {
   Builder,
@@ -15,7 +15,7 @@ export class ObjectBuilder implements Builder<ObjectValue> {
   private showName: boolean;
   private schema: Schema;
 
-  private builder: RootBuilder;
+  private builder: RootBuilder<ObjectValue>;
 
   constructor({
     key,
@@ -30,34 +30,34 @@ export class ObjectBuilder implements Builder<ObjectValue> {
     this.schema = schema;
     this.showName = showName;
 
-    this.builder = new RootBuilder(schema.properties, this._value);
+    this.builder = new RootObjectBuilder(schema.properties, this._value);
   }
 
-  private handleClick = () => {
-    objectStore.add(this.builder, this.update);
-  };
+  private handleClick() {
+    objectStore.add(this.builder, this.update.bind(this));
+  }
 
-  public build = () => {
+  public build() {
     return (
       <Button
         key={this.key}
         name={
           this.showName ? this.name : `{{ ${this.schema.type.toUpperCase()} }}`
         }
-        onClick={this.handleClick}
+        onClick={this.handleClick.bind(this)}
       />
     );
-  };
+  }
 
-  public value = () => {
+  public value() {
     return this._value;
-  };
+  }
 
-  public update = () => {
-    const updatedValue = this.builder.value() as ObjectValue;
+  public update() {
+    const updatedValue = this.builder.value();
 
     for (const property in updatedValue) {
       this._value[property] = updatedValue[property];
     }
-  };
+  }
 }

@@ -4,7 +4,7 @@ import css from "./close.module.css";
 
 export function Close() {
   return (
-    <button className={css.close} onClick={dialogStore.remove}>
+    <button className={css.close} onClick={() => dialogStore.remove()}>
       <X size={24} />
     </button>
   );

@@ -24,13 +24,13 @@ export class ImageBuilder implements Builder<CmsFile> {
     this.showName = showName;
   }
 
-  private handleChange = async (image: File) => {
+  private async handleChange(image: File) {
     const imageId = await fileStore.update(image, this._value.value);
 
     this._value.value = imageId;
-  };
+  }
 
-  public build = () => {
+  public build() {
     const id = this._value.value;
     const src = id.length > 0 ? fileStore.getAbsoluteUrl(id) : "";
 
@@ -40,13 +40,13 @@ export class ImageBuilder implements Builder<CmsFile> {
         id={this.key}
         src={src}
         label={this.name}
-        onChange={this.handleChange}
+        onChange={this.handleChange.bind(this)}
         showName={this.showName}
       />
     );
-  };
+  }
 
-  public value = () => {
+  public value() {
     return this._value;
-  };
+  }
 }

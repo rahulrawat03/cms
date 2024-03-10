@@ -1,0 +1,8 @@
+.unknown {
+  background: var(--color-secondary);
+  font-size: var(--font-size-small);
+  width: var(--size-part-ninety);
+  margin: var(--value-none) var(--spacing-normal);
+  padding: var(--spacing-normal) var(--spacing-normal);
+  border-radius: var(--border-radius-small);
+}

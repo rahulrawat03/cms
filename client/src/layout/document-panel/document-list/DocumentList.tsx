@@ -8,16 +8,17 @@ export const DocumentList = observer(Component);
 
 function Component() {
   const documents = documentStore.documents;
-  const documentBuilders = documents.map(
-    ({ id, type, identifier }) =>
-      new DocumentBuilder({
-        key: id.toString(),
-        value: { type },
-        name: identifier,
-        showName: true,
-        schema: SchemaBuilder.instance.getSchema(type),
-      })
-  );
+  const documentBuilders = documents.map(({ id, type, identifier }) => {
+    const schema = SchemaBuilder.instance.getSchema(type, true);
+
+    return new DocumentBuilder({
+      key: id.toString(),
+      value: { type, isUnknown: schema.type !== type },
+      name: identifier,
+      showName: true,
+      schema,
+    });
+  });
 
   return (
     <div className={css.documentList}>

@@ -1,4 +1,4 @@
-import { RootBuilder } from "@cms/layout";
+import { RootArrayBuilder, RootBuilder } from "@cms/layout";
 import { arrayStore } from "@cms/stores";
 import { ArrayValue, Builder, BuilderConstructorProperties } from "@cms/types";
 import { Button } from "../common";
@@ -9,7 +9,7 @@ export class ArrayBuilder implements Builder<ArrayValue> {
   private name: string;
   private showName: boolean;
 
-  private builder: RootBuilder;
+  private builder: RootBuilder<ArrayValue>;
 
   constructor({
     key,
@@ -22,29 +22,29 @@ export class ArrayBuilder implements Builder<ArrayValue> {
     this.name = name;
     this.showName = showName;
 
-    this.builder = new RootBuilder([], this._value);
+    this.builder = new RootArrayBuilder([], this._value);
   }
 
-  private handleClick = () => {
-    arrayStore.add(this.builder, this.update);
-  };
+  private handleClick() {
+    arrayStore.add(this.builder, this.update.bind(this));
+  }
 
-  public build = () => {
+  public build() {
     return (
       <Button
         key={this.key}
         name={this.showName ? this.name : "{{ ARRAY }}"}
-        onClick={this.handleClick}
+        onClick={this.handleClick.bind(this)}
       />
     );
-  };
+  }
 
-  public value = () => {
+  public value() {
     return this._value;
-  };
+  }
 
-  public update = () => {
+  public update() {
     this._value.length = 0;
-    this._value.push(...(this.builder.value() as ArrayValue));
-  };
+    this._value.push(...this.builder.value());
+  }
 }

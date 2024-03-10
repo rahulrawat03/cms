@@ -13,11 +13,11 @@ export class Queue<T> {
     this.end = 0;
   }
 
-  public add = (element: T) => {
+  public add(element: T) {
     this.elements[this.end++] = element;
-  };
+  }
 
-  public remove = () => {
+  public remove() {
     if (this.isEmpty) {
       return;
     }
@@ -26,7 +26,7 @@ export class Queue<T> {
     delete this.elements[this.start++];
 
     return item;
-  };
+  }
 
   public get size() {
     return this.end - this.start;

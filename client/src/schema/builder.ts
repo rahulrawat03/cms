@@ -1,7 +1,6 @@
 import { Constant } from "../constants";
 import {
   Document,
-  File,
   ObjectValue,
   Schema,
   SchemaType,
@@ -34,7 +33,7 @@ export class SchemaBuilder {
 
   // Initializer methods =========================================
 
-  private populateTypes = (schema: Schema, as: string) => {
+  private populateTypes(schema: Schema, as: string) {
     const type = schema.type;
 
     switch (as) {
@@ -85,9 +84,9 @@ export class SchemaBuilder {
       default:
         throw new Error(`Invalid wrapper type "${type}" chosen.`);
     }
-  };
+  }
 
-  private validateDuplicateProperties = () => {
+  private validateDuplicateProperties() {
     for (const schema of this.schemas) {
       const registeredProperties = new Set<string>();
 
@@ -101,9 +100,9 @@ export class SchemaBuilder {
         registeredProperties.add(name);
       }
     }
-  };
+  }
 
-  private validateUnregisteredTypes = () => {
+  private validateUnregisteredTypes() {
     const unregisteredTypes = new Set<string>();
 
     for (const schema of this.schemas) {
@@ -125,21 +124,24 @@ export class SchemaBuilder {
     }
 
     if (unregisteredTypes.size > 0) {
-      throw new Error(`Unregistered types found: ${[...unregisteredTypes]}`);
+      throw new Error(`Unregistered type(s) found: ${[...unregisteredTypes]}`);
     }
-  };
+  }
 
   // Schema Utilities ===============================================
 
   public get schemaTypes() {
-    return <const>[...Constant.primiteSchemaTypes, ...this.objectTypes.keys()];
+    return <const>[
+      ...Constant.PRIMITIVE_SCHEMA_TYPES,
+      ...this.objectTypes.keys(),
+    ];
   }
 
   public get documentSchemaTypes() {
     return <const>[...this.documentTypes.keys()];
   }
 
-  public getSchema = (type: string) => {
+  public getSchema(type: string, document: boolean = false) {
     const schemaType = this.getParentSchemaType(type);
 
     switch (schemaType) {
@@ -157,51 +159,55 @@ export class SchemaBuilder {
         return this.getDocumentSchema(type);
 
       default:
-        throw new Error(`Invalid schema type "${type}" found.`);
+        return document ? Constant.UNKNOWN_DOCUMENT : Constant.UNKNOWN_OBJECT;
     }
-  };
+  }
 
-  private getDocumentSchema = (type: string) => {
+  private getDocumentSchema(type: string) {
     if (!this.documentTypes.has(type)) {
       throw new Error(`Document of type "${type}" is not registered`);
     }
 
     return this.documentTypes.get(type) as Schema;
-  };
+  }
 
-  private getObjectSchema = (type: string) => {
+  private getObjectSchema(type: string) {
     if (!this.objectTypes.has(type)) {
       throw new Error(`Object of type "${type}" is not registered`);
     }
 
     return this.objectTypes.get(type) as Schema;
-  };
+  }
 
-  private getPrimitiveSchema = (type: string) => {
+  private getPrimitiveSchema(type: string) {
     return {
       as: SchemaType.PRIMITIVE as string,
       type,
       properties: [],
     } as Schema;
-  };
+  }
 
-  private isPrimitiveType = (type: string) => {
-    return Constant.primiteSchemaTypes.has(type);
-  };
+  private isPrimitiveType(type: string) {
+    return Constant.PRIMITIVE_SCHEMA_TYPES.has(type);
+  }
 
-  public getParentSchemaType = (type: string) => {
+  public getParentSchemaType(type: string) {
     if (this.isPrimitiveType(type)) {
       return type;
+    }
+
+    if (this.objectTypes.has(type)) {
+      return SchemaType.OBJECT;
     }
 
     if (this.documentTypes.has(type)) {
       return SchemaType.DOCUMENT;
     }
 
-    return SchemaType.OBJECT;
-  };
+    return SchemaType.UNKNOWN;
+  }
 
-  public inferParentSchemaType = (value: Value) => {
+  public inferParentSchemaType(value: Value) {
     if (
       typeof value === SchemaType.NUMBER ||
       typeof value === SchemaType.STRING
@@ -213,24 +219,34 @@ export class SchemaBuilder {
       return SchemaType.ARRAY;
     }
 
-    if (this.isPrimitiveType((value as TypedObject).type)) {
-      return (value as File).type;
+    const { type } = value as TypedObject;
+
+    if (this.isPrimitiveType(type)) {
+      return type;
     }
 
-    return SchemaType.OBJECT;
-  };
+    if (this.objectTypes.has(type)) {
+      return SchemaType.OBJECT;
+    }
 
-  public inferSchemaType = (value: Value) => {
+    return SchemaType.UNKNOWN;
+  }
+
+  public inferSchemaType(value: Value) {
     const parentSchemaType = this.inferParentSchemaType(value);
 
     if (this.isPrimitiveType(parentSchemaType)) {
       return parentSchemaType;
     }
 
-    return (value as TypedObject).type;
-  };
+    if (parentSchemaType === SchemaType.UNKNOWN) {
+      return parentSchemaType;
+    }
 
-  public getDefaultValue = (type: string) => {
+    return (value as TypedObject).type;
+  }
+
+  public getDefaultValue(type: string) {
     const schemaType = this.getParentSchemaType(type);
 
     switch (schemaType) {
@@ -250,9 +266,9 @@ export class SchemaBuilder {
       default:
         throw new Error(`Invalid schema type "${type}" found.`);
     }
-  };
+  }
 
-  private getDefaultDocumentValue = (type: string): Document => {
+  private getDefaultDocumentValue(type: string) {
     const documentData = this.getDefaultObjectValue(type);
 
     const document: Document = {
@@ -264,9 +280,9 @@ export class SchemaBuilder {
     };
 
     return document;
-  };
+  }
 
-  private getDefaultPrimitiveValue = (type: string): Value => {
+  private getDefaultPrimitiveValue(type: string): Value {
     switch (type) {
       case SchemaType.NUMBER:
         return 0;
@@ -281,9 +297,9 @@ export class SchemaBuilder {
           value: "",
         };
     }
-  };
+  }
 
-  private getDefaultObjectValue = (type: string): ObjectValue => {
+  private getDefaultObjectValue(type: string) {
     const schema = this.getSchema(type);
 
     const value: ObjectValue = { type };
@@ -292,5 +308,5 @@ export class SchemaBuilder {
     }
 
     return value;
-  };
+  }
 }

@@ -1,9 +1,13 @@
 import { api } from "@cms/utils";
 
 class FileStore {
+  public static readonly instance = new FileStore();
+
   private endpoint = `/file`;
 
-  public update = async (file: File, oldFileId: string) => {
+  private constructor() {}
+
+  public async update(file: File, oldFileId: string) {
     if (oldFileId) {
       await this.deleteFile(oldFileId);
     }
@@ -14,9 +18,9 @@ class FileStore {
     }
 
     return id;
-  };
+  }
 
-  private uploadFile = async (file: File) => {
+  private async uploadFile(file: File) {
     try {
       const data = new FormData();
       data.append("file", file);
@@ -27,18 +31,19 @@ class FileStore {
     } catch (ex: unknown) {
       // pass
     }
-  };
+  }
 
-  private deleteFile = async (fileId: string) => {
+  private async deleteFile(fileId: string) {
     try {
       await api<void>(`${this.endpoint}/${fileId}`, "DELETE");
     } catch (ex: unknown) {
       // pass
     }
-  };
+  }
 
-  public getAbsoluteUrl = (id: string) =>
-    `${import.meta.env.VITE_API_ENDPOINT}/file/${id}`;
+  public getAbsoluteUrl(id: string) {
+    return `${import.meta.env.VITE_API_ENDPOINT}/file/${id}`;
+  }
 }
 
-export const fileStore = new FileStore();
+export const fileStore = FileStore.instance;

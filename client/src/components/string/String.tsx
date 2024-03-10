@@ -19,7 +19,7 @@ export class StringBuilder implements Builder<string> {
     this.showName = showName;
   }
 
-  public build = () => {
+  public build() {
     return (
       <Input
         key={this.key}
@@ -31,9 +31,9 @@ export class StringBuilder implements Builder<string> {
         setValue={(value) => (this._value = value as string)}
       />
     );
-  };
+  }
 
-  public value = () => {
+  public value() {
     return this._value;
-  };
+  }
 }

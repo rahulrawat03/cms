@@ -24,16 +24,16 @@ export class FileBuilder implements Builder<CmsFile> {
     this.showName = showName;
   }
 
-  private handleChange = async (file: File) => {
+  private async handleChange(file: File) {
     const fileId = await fileStore.update(file, this._value.value);
 
     if (fileId !== this._value.value) {
       this._value.name = file.name;
       this._value.value = fileId;
     }
-  };
+  }
 
-  public build = () => {
+  public build() {
     const { name, value } = this._value;
 
     return (
@@ -43,14 +43,13 @@ export class FileBuilder implements Builder<CmsFile> {
         src={value}
         name={name.length > 0 ? name : "{{ FILE }}"}
         label={this.name}
-        onChange={this.handleChange}
+        onChange={this.handleChange.bind(this)}
         showName={this.showName}
       />
     );
-  };
+  }
 
-  public value = () => {
-    console.log(this._value);
+  public value() {
     return this._value;
-  };
+  }
 }

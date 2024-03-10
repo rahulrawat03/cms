@@ -16,7 +16,7 @@ function Component() {
   const dialogRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  useClickOutside<void>(dialogStore.clear, dialogRef, wrapperRef);
+  useClickOutside<void>(() => dialogStore.clear(), dialogRef, wrapperRef);
 
   if (!currentLayer) {
     return null;

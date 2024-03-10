@@ -6,6 +6,7 @@ import { ObjectBuilder } from "../object";
 import { StringBuilder } from "../string";
 import { ImageBuilder } from "../image";
 import { FileBuilder } from "../file";
+import { UnknownBuilder } from "../unknown";
 
 type BuilderClass<T> = new (
   properties: BuilderConstructorProperties<T>
@@ -21,4 +22,5 @@ export const ComponentMap: {
   array: ArrayBuilder,
   object: ObjectBuilder,
   document: DocumentBuilder,
+  unknown: UnknownBuilder,
 };

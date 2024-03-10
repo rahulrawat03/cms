@@ -18,7 +18,7 @@ export interface File {
   value: string;
 }
 
-export type Value = number | string | File | ArrayValue | ObjectValue;
+export type Value = number | string | boolean | File | ArrayValue | ObjectValue;
 
 export type ArrayValue = Value[];
 
