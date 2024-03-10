@@ -36,10 +36,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3333:80
-    environment:
-      VITE_API_ENDPOINT: api:4000
     networks:
       - cms-network
+    depends_on:
+      - api
 volumes:
   cms-db:
   cms-data:

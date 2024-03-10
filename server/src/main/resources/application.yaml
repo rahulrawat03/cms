@@ -24,4 +24,4 @@ server:
     include-stacktrace: never
 cors:
   allowed-origins: '*'
-DATA_DIRECTORY: 'C:\Users\rahul.rawat\Downloads'
+DATA_DIRECTORY: '/data'
