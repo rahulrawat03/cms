@@ -16,7 +16,6 @@
   border-radius: var(--border-radius-small);
   cursor: pointer;
   height: var(--size-large);
-  display: block;
   transition: var(--transition-small);
   display: flex;
   align-items: center;

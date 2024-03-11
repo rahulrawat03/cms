@@ -6,11 +6,11 @@
   padding: var(--spacing-small) var(--spacing-normal);
   text-decoration: none;
   border-bottom: var(--thickness-x-small) solid var(--color-tertiary);
+  transition: var(--transition-small);
 }
 
 .document:hover {
   background: var(--color-tertiary);
-  transition: var(--transition-small);
   color: var(--color-text-light);
 }
 

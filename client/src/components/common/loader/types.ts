@@ -1,5 +1,4 @@
 export enum LoaderVariant {
-  SMALL = "small",
-  MEDIUM = "medium",
-  LARGE = "large",
+  CIRCLE = "circle",
+  DOT = "dot",
 }

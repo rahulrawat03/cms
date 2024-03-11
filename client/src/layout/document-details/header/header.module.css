@@ -1,11 +1,16 @@
 .header {
   background: var(--color-primary);
   color: var(--color-text-light);
-  font-size: var(--font-size-normal);
   padding: var(--spacing-small) var(--spacing-large);
   text-transform: capitalize;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: var(--font-size-normal);
+  font-weight: normal;
+  flex-grow: 1;
 }
 
 .button {

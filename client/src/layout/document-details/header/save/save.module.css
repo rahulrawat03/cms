@@ -1,8 +1,12 @@
 .save {
-  transition: var(--transition-small);
+  width: var(--size-x-large);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: var(--color-secondary);
   color: var(--color-text-dark);
   border: var(--thickness-x-small) solid var(--color-secondary);
+  transition: var(--transition-small);
 }
 
 .save:hover {

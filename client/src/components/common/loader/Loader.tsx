@@ -1,35 +1,19 @@
-import { cls } from "@cms/utils";
-import css from "./loader.module.css";
 import { LoaderVariant } from "./types";
+import { _CircularLoader, _DotLoader } from "./internal";
 
 interface LoaderProps {
-  variant?: LoaderVariant;
+  variant: LoaderVariant;
 }
 
-export function Loader({
-  variant = LoaderVariant.SMALL,
-}: Readonly<LoaderProps>) {
-  let className = "";
-
+export function Loader({ variant }: Readonly<LoaderProps>) {
   switch (variant) {
-    case LoaderVariant.LARGE:
-      className = css.large;
-      break;
-    case LoaderVariant.MEDIUM:
-      className = css.medium;
-      break;
-    case LoaderVariant.SMALL:
-    default:
-      className = css.small;
-  }
+    case LoaderVariant.CIRCLE:
+      return _CircularLoader();
 
-  return (
-    <div className={css.wrapper}>
-      <div className={cls(className, css.container)}>
-        <div className={css.circleLarge} />
-        <div className={css.circleMedium} />
-        <div className={css.circleSmall} />
-      </div>
-    </div>
-  );
+    case LoaderVariant.DOT:
+      return _DotLoader();
+
+    default:
+      return null;
+  }
 }

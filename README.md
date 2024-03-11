@@ -146,12 +146,8 @@ Once added in registry, `genre` can be used as any other type. Let's add it to t
 ```
 
 Now the schema looks like this.  
-<img src="./assets/movie_genre_i.png" width="600" />
-<br />
-<br />
-<img src="./assets/movie_genre_ii.png" width="600" />
-<br />
-<br />
+<img src="./assets/movie_genre_i.png" width="600" />  
+<img src="./assets/movie_genre_ii.png" width="600" />  
 <img src="./assets/movie_genre_iii.png" width="600" />
 
 ### Actor
@@ -207,13 +203,7 @@ Now, let's add the corresponding property to the document.
 ```
 
 We can see the corresponding change on the client.  
-<img src="./assets/movie_actor_i.png" width="600" />
-<br />
-<br />
+<img src="./assets/movie_actor_i.png" width="600" />  
 <img src="./assets/movie_actor_ii.png" width="600" />  
-<br />
-<br />
 <img src="./assets/movie_actor_iii.png" width="600" />  
-<br />
-<br />
 <img src="./assets/movie_actor_iv.png" width="600" />

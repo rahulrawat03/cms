@@ -1,0 +1,29 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dot {
+  width: var(--size-x-small);
+  height: var(--size-x-small);
+  border-radius: var(--border-radius-full);
+  animation: scale 1s linear infinite;
+}
+
+@keyframes scale {
+  0% {
+    transform: scale(1);
+    background: var(--color-primary);
+  }
+
+  50% {
+    transform: scale(0.5);
+    background: var(--color-secondary);
+  }
+
+  100% {
+    transform: scale(1);
+    background: var(--color-primary);
+  }
+}

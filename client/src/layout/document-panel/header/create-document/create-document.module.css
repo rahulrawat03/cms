@@ -32,7 +32,6 @@
   background: var(--color-secondary);
   color: var(--color-text-dark);
   border: var(--thickness-small) solid var(--color-tertiary);
-  list-style: none;
   width: var(--size-huge);
   height: var(--size-x-huge);
   overflow: hidden scroll;
@@ -40,25 +39,24 @@
   padding: var(--spacing-x-small) var(--value-none);
 }
 
-.createOptionWrapper {
-  padding: var(--spacing-x-small) var(--spacing-small);
-  margin-bottom: var(--spacing-x-small);
-  margin-left: var(--spacing-x-small);
-  transition: var(--transition-small);
-}
-
-.createOptionWrapper:hover {
-  background: var(--color-tertiary);
-  color: var(--color-text-light);
-}
-
 .createOption {
   display: block;
   font-size: var(--font-size-x-small);
-  color: var(--color-text-dark);
+  padding: var(--spacing-x-small) var(--spacing-small);
+  margin-bottom: var(--spacing-x-small);
+  margin-left: var(--spacing-x-small);
+  color: inherit;
+  background: inherit;
+  border-radius: var(--border-radius-x-small);
   text-decoration: none;
+  transition: var(--transition-small);
 }
 
-.createOptionWrapper:hover .createOption {
+.createOption:hover {
+  background: linear-gradient(
+    90deg,
+    var(--color-tertiary) 0%,
+    var(--color-secondary) 100%
+  );
   color: var(--color-text-light);
 }

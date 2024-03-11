@@ -9,11 +9,9 @@ interface HeaderProps {
 export function Header({ title }: Readonly<HeaderProps>) {
   return (
     <header className={css.header}>
-      {title}
-      <div>
-        <Delete />
-        <Save />
-      </div>
+      <h2 className={css.title}>{title}</h2>
+      <Delete />
+      <Save />
     </header>
   );
 }

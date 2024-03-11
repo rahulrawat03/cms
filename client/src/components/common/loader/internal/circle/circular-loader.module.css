@@ -1,18 +1,3 @@
-.large {
-  --size: 0.6;
-  --animation-duration: 1.8s;
-}
-
-.medium {
-  --size: 0.4;
-  --animation-duration: 1.2s;
-}
-
-.small {
-  --size: 0.25;
-  --animation-duration: 0.75s;
-}
-
 .wrapper {
   width: var(--size-full);
   height: var(--size-full);
@@ -25,7 +10,7 @@
   width: var(--size-huge);
   height: var(--size-huge);
   position: relative;
-  animation: rotation var(--animation-duration) linear infinite;
+  animation: rotation 1.8s linear infinite;
 }
 
 .circleLarge,
@@ -60,10 +45,10 @@
 
 @keyframes rotation {
   from {
-    transform: rotate(0) scale(var(--size));
+    transform: rotate(0) scale(0.6);
   }
 
   to {
-    transform: rotate(360deg) scale(var(--size));
+    transform: rotate(360deg) scale(0.6);
   }
 }

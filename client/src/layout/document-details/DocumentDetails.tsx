@@ -21,7 +21,7 @@ export function DocumentDetails() {
   if (!(id && type && !loading)) {
     return (
       <div className={css.documentDetails}>
-        <Loader variant={LoaderVariant.LARGE} />
+        <Loader variant={LoaderVariant.CIRCLE} />
       </div>
     );
   }
