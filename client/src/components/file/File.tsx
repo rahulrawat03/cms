@@ -1,10 +1,10 @@
 import { Builder, BuilderConstructorProperties, Resource } from "@cms/types";
 import { File } from "@cms/components";
-import { fileStore } from "@cms/stores/file";
+import { fileStore } from "@cms/stores";
 
 export class FileBuilder implements Builder<Resource> {
   public readonly key: string;
-  private _value: Resource;
+  private value: Resource;
   private name: string;
   private showName: boolean;
 
@@ -15,22 +15,22 @@ export class FileBuilder implements Builder<Resource> {
     showName,
   }: BuilderConstructorProperties<Resource, void>) {
     this.key = `${key}-${crypto.randomUUID()}`;
-    this._value = value;
+    this.value = value;
     this.name = name;
     this.showName = showName;
   }
 
   private async handleChange(file: File) {
-    const fileId = await fileStore.update(file, this._value.value);
+    const fileId = await fileStore.update(file, this.value.value);
 
-    if (fileId !== this._value.value) {
-      this._value.name = file.name;
-      this._value.value = fileId;
+    if (fileId !== this.value.value) {
+      this.value.name = file.name;
+      this.value.value = fileId;
     }
   }
 
   public build() {
-    const { name, value } = this._value;
+    const { name, value } = this.value;
 
     return (
       <File
@@ -45,7 +45,7 @@ export class FileBuilder implements Builder<Resource> {
     );
   }
 
-  public value() {
-    return this._value;
+  public getValue() {
+    return this.value;
   }
 }

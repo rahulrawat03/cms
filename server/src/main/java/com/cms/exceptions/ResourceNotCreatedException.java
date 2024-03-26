@@ -8,6 +8,10 @@ import com.cms.utilities.Constant;
 @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = Constant.RESOURCE_NOT_CREATED)
 public class ResourceNotCreatedException extends Exception {
   public ResourceNotCreatedException() {
-    super();
+    super(Constant.RESOURCE_NOT_CREATED);
+  }
+
+  public ResourceNotCreatedException(String message) {
+    super(message);
   }
 }

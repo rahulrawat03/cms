@@ -5,7 +5,7 @@ export interface Builder<T> {
 
   build(): ReactElement | null;
 
-  value(): T;
+  getValue(): T;
 }
 
 export interface BuilderConstructorProperties<U, V> {

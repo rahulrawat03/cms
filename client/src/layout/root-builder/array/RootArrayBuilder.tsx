@@ -43,10 +43,10 @@ export class RootArrayBuilder extends RootBuilder<ArrayValue> {
     return null;
   }
 
-  public value(): ArrayValue {
+  public getValue(): ArrayValue {
     return {
       type: this.schema.type,
-      values: this.builders.map(({ builder }) => builder.value()),
+      values: this.builders.map(({ builder }) => builder.getValue()),
     };
   }
 }

@@ -1,4 +1,5 @@
 import { Constant } from "@cms/constants";
+import { errorStore } from "@cms/stores";
 
 /**
  *
@@ -31,6 +32,12 @@ export async function api<T>(
   const data = await response.json();
 
   if (!response.ok) {
+    if (response.status >= 400 && response.status < 500 && data?.message) {
+      errorStore.register(data.message);
+    } else {
+      errorStore.registerServerError();
+    }
+
     throw new Error(data);
   }
 

@@ -3,7 +3,8 @@ import { Queue } from "@cms/utils";
 
 class Node {
   constructor(
-    public documents: DocumentPreview[] = [],
+    public character: string = "$",
+    public document: DocumentPreview | null = null,
     public children: { [key: string]: Node } = {}
   ) {}
 }
@@ -34,12 +35,13 @@ class SearchStore {
     }
 
     while (index < identifier.length) {
-      const child = new Node();
-      node.children[identifier[index++]] = child;
+      const child = new Node(identifier[index]);
+      node.children[identifier[index]] = child;
       node = child;
+      index++;
     }
 
-    node.documents.push(document);
+    node.document = document;
   }
 
   public getDocuments(query: string) {
@@ -62,7 +64,9 @@ class SearchStore {
 
     while (!nodes.isEmpty) {
       node = nodes.remove()!;
-      documents.push(...node.documents);
+      if (node.document) {
+        documents.push(node.document);
+      }
 
       for (const child of Object.values(node.children)) {
         nodes.add(child);
@@ -70,6 +74,34 @@ class SearchStore {
     }
 
     return documents;
+  }
+
+  public removeDocument(query: string) {
+    query = query.toLowerCase();
+
+    let node = this.root;
+    let index = 0;
+
+    const seenNodes: Node[] = [];
+
+    while (index < query.length && node.children[query[index]]) {
+      seenNodes.push(node);
+      node = node.children[query[index++]];
+    }
+
+    // Reset the document preview at this node since it's deleted now
+    node.document = null;
+
+    if (Object.keys(node.children).length > 0) {
+      return;
+    }
+
+    while (seenNodes.length > 1 && !seenNodes[seenNodes.length - 1].document) {
+      const currentNode = seenNodes.pop()!;
+      const parentNode = seenNodes[seenNodes.length - 1];
+
+      delete parentNode.children[currentNode.character];
+    }
   }
 }
 

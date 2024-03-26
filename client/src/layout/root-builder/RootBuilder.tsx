@@ -53,5 +53,5 @@ export abstract class RootBuilder<T> implements Builder<T> {
     index: number
   ): ReactElement | null;
 
-  public abstract value(): T;
+  public abstract getValue(): T;
 }

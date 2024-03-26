@@ -4,7 +4,7 @@ import { fileStore } from "@cms/stores";
 
 export class ImageBuilder implements Builder<Resource> {
   public readonly key: string;
-  private _value: Resource;
+  private value: Resource;
   private name: string;
   private showName: boolean;
 
@@ -15,22 +15,22 @@ export class ImageBuilder implements Builder<Resource> {
     showName,
   }: BuilderConstructorProperties<Resource, void>) {
     this.key = `${key}-${crypto.randomUUID()}`;
-    this._value = value;
+    this.value = value;
     this.name = name;
     this.showName = showName;
   }
 
   private async handleChange(image: File) {
-    const imageId = await fileStore.update(image, this._value.value);
+    const imageId = await fileStore.update(image, this.value.value);
 
-    if (imageId !== this._value.value) {
-      this._value.name = image.name;
-      this._value.value = imageId;
+    if (imageId !== this.value.value) {
+      this.value.name = image.name;
+      this.value.value = imageId;
     }
   }
 
   public build() {
-    const id = this._value.value;
+    const id = this.value.value;
     const src = id.length > 0 ? fileStore.getAbsoluteUrl(id) : "";
 
     return (
@@ -45,7 +45,7 @@ export class ImageBuilder implements Builder<Resource> {
     );
   }
 
-  public value() {
-    return this._value;
+  public getValue() {
+    return this.value;
   }
 }

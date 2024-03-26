@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cms.exceptions.DocumentAlreadyExistsException;
 import com.cms.exceptions.ResourceNotCreatedException;
 import com.cms.exceptions.ResourceNotDeletedException;
 import com.cms.exceptions.ResourceNotFoundException;
@@ -15,6 +14,7 @@ import com.cms.models.Document;
 import com.cms.payloads.requests.DocumentUpdatePayload;
 import com.cms.payloads.responses.DocumentPreview;
 import com.cms.repositories.DocumentRepository;
+import com.cms.utilities.Constant;
 
 @Service
 public class DocumentService {
@@ -49,10 +49,14 @@ public class DocumentService {
   }
 
   @Transactional
-  public Long save(Document document) throws DocumentAlreadyExistsException, ResourceNotCreatedException {
+  public Long save(Document document) throws ResourceNotCreatedException {
     try {
+      if (document.getIdentifier().length() == 0) {
+        throw new ResourceNotCreatedException(Constant.EMPTY_IDENTIFIER);
+      }
+
       if (documentRepository.existsByIdentifier(document.getIdentifier())) {
-        throw new DocumentAlreadyExistsException();
+        throw new ResourceNotCreatedException(Constant.DOCUMENT_ALREADY_EXISTS);
       }
 
       Document savedDocument = documentRepository.save(document);
@@ -66,17 +70,21 @@ public class DocumentService {
   @Transactional
   public Long update(Long id, DocumentUpdatePayload payload)
       throws ResourceNotFoundException, ResourceNotUpdatedException {
-    Optional<Document> existingDocument = documentRepository.findById(id);
+    Optional<Document> document = documentRepository.findById(id);
 
-    if (!existingDocument.isPresent()) {
+    if (!document.isPresent()) {
       throw new ResourceNotFoundException();
     }
 
-    existingDocument.get().setData(payload.getData());
-    existingDocument.get().setIdentifier(payload.getIdentifier());
+    if (payload.getIdentifier().length() == 0) {
+      throw new ResourceNotUpdatedException(Constant.EMPTY_IDENTIFIER);
+    }
+
+    document.get().setData(payload.getData());
+    document.get().setIdentifier(payload.getIdentifier());
 
     try {
-      documentRepository.save(existingDocument.get());
+      documentRepository.save(document.get());
       return id;
     } catch (Exception ex) {
       throw new ResourceNotUpdatedException();

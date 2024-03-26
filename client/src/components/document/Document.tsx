@@ -12,7 +12,7 @@ import css from "./document.module.css";
 export class DocumentBuilder implements Builder<ObjectValue> {
   public readonly key: string;
   private name: string;
-  private _value: ObjectValue;
+  private value: ObjectValue;
   private schema: DocumentSchema;
 
   constructor({
@@ -23,13 +23,15 @@ export class DocumentBuilder implements Builder<ObjectValue> {
   }: BuilderConstructorProperties<ObjectValue, DocumentSchema>) {
     this.key = key;
     this.name = name;
-    this._value = value;
+    this.value = value;
     this.schema = schema;
   }
 
   public build() {
-    const { type, isUnknown } = this._value;
-    const name = isUnknown ? `Unknown Document {{ ${type} }}` : this.name;
+    const { type, isUnknown } = this.value;
+    const name = isUnknown
+      ? `Unknown Document {{ ${type as string} }}`
+      : this.name;
 
     return (
       <Link
@@ -43,7 +45,7 @@ export class DocumentBuilder implements Builder<ObjectValue> {
     );
   }
 
-  public value() {
-    return documentStore.builder?.value() ?? {};
+  public getValue() {
+    return documentStore.builder?.getValue() ?? {};
   }
 }

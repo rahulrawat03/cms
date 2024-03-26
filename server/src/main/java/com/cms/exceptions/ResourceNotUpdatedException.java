@@ -8,6 +8,10 @@ import com.cms.utilities.Constant;
 @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = Constant.RESOURCE_NOT_UPDATED)
 public class ResourceNotUpdatedException extends Exception {
   public ResourceNotUpdatedException() {
-    super();
+    super(Constant.RESOURCE_NOT_UPDATED);
+  }
+
+  public ResourceNotUpdatedException(String message) {
+    super(message);
   }
 }

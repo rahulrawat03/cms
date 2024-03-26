@@ -132,7 +132,7 @@ class DocumentStore {
 
     try {
       const { id, type } = this._currentDocument;
-      const data = this._builder.value();
+      const data = this._builder.getValue();
       const identifierName =
         SchemaBuilder.instance.getSchema(type).identifier ?? "";
       const identifier = data[identifierName] as string;
@@ -160,7 +160,7 @@ class DocumentStore {
 
     try {
       const { type } = this._currentDocument;
-      const data = this._builder.value();
+      const data = this._builder.getValue();
       const identifierName =
         SchemaBuilder.instance.getSchema(type).identifier ?? "";
       const identifier = (data?.[identifierName] ?? "") as string;
@@ -191,13 +191,15 @@ class DocumentStore {
     }
 
     try {
-      const id = this._currentDocument.id;
+      const { id, identifier } = this._currentDocument;
 
       await api<void>(`${this.endpoint}/${id}`, "DELETE");
 
       const index = this._documents.findIndex((document) => document.id === id);
+
       runInAction(() => {
         this._documents.splice(index, 1);
+        searchStore.removeDocument(identifier);
       });
 
       if (this.documents.length === 0) {

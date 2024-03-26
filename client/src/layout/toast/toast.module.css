@@ -1,0 +1,30 @@
+.toast {
+  position: fixed;
+  animation: slide 4s 1;
+  bottom: calc(var(--value-none) - var(--spacing-huge));
+  left: var(--size-half);
+  transform: translateX(calc(var(--factor-none) - var(--size-half)));
+  background: linear-gradient(
+    0deg,
+    var(--color-tertiary),
+    var(--color-primary)
+  );
+  color: var(--color-text-light);
+  letter-spacing: var(--thickness-x-small);
+  box-shadow: var(--shadow-light);
+  border-radius: var(--border-radius-small);
+  font-size: var(--font-size-small);
+  padding: var(--spacing-small) var(--spacing-x-large);
+}
+
+@keyframes slide {
+  0%,
+  100% {
+    bottom: calc(var(--value-none) - var(--spacing-huge));
+  }
+
+  20%,
+  80% {
+    bottom: var(--spacing-huge);
+  }
+}

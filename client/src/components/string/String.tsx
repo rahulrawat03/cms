@@ -3,7 +3,7 @@ import { Input } from "../common";
 
 export class StringBuilder implements Builder<string> {
   public readonly key: string;
-  private _value: string;
+  private value: string;
   private name: string;
   private showName: boolean;
 
@@ -14,7 +14,7 @@ export class StringBuilder implements Builder<string> {
     showName,
   }: BuilderConstructorProperties<string, void>) {
     this.key = `${key}-${crypto.randomUUID()}`;
-    this._value = value;
+    this.value = value;
     this.name = name;
     this.showName = showName;
   }
@@ -27,13 +27,13 @@ export class StringBuilder implements Builder<string> {
         name={this.name}
         showName={this.showName}
         type={"string"}
-        initialValue={this._value}
-        setValue={(value) => (this._value = value as string)}
+        initialValue={this.value}
+        setValue={(value) => (this.value = value as string)}
       />
     );
   }
 
-  public value() {
-    return this._value;
+  public getValue() {
+    return this.value;
   }
 }

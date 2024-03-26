@@ -8,6 +8,10 @@ import com.cms.utilities.Constant;
 @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = Constant.RESOURCE_NOT_DELETED)
 public class ResourceNotDeletedException extends Exception {
   public ResourceNotDeletedException() {
-    super();
+    super(Constant.RESOURCE_NOT_DELETED);
+  }
+
+  public ResourceNotDeletedException(String message) {
+    super(message);
   }
 }

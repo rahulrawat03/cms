@@ -11,7 +11,7 @@ import { Button } from "../common";
 
 export class ObjectBuilder implements Builder<ObjectValue> {
   public readonly key: string;
-  private _value: ObjectValue;
+  private value: ObjectValue;
   private name: string;
   private showName: boolean;
   private schema: Schema;
@@ -26,12 +26,12 @@ export class ObjectBuilder implements Builder<ObjectValue> {
     showName,
   }: BuilderConstructorProperties<ObjectValue, ObjectSchema>) {
     this.key = key;
-    this._value = value;
+    this.value = value;
     this.name = name;
     this.schema = schema;
     this.showName = showName;
 
-    this.builder = new RootObjectBuilder(schema, this._value);
+    this.builder = new RootObjectBuilder(schema, this.value);
   }
 
   private handleClick() {
@@ -50,15 +50,15 @@ export class ObjectBuilder implements Builder<ObjectValue> {
     );
   }
 
-  public value() {
-    return this._value;
+  public getValue() {
+    return this.value;
   }
 
   public update() {
-    const updatedValue = this.builder.value();
+    const updatedValue = this.builder.getValue();
 
     for (const property in updatedValue) {
-      this._value[property] = updatedValue[property];
+      this.value[property] = updatedValue[property];
     }
   }
 }

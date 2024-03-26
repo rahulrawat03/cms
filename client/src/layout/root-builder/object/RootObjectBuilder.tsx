@@ -33,10 +33,10 @@ export class RootObjectBuilder extends RootBuilder<ObjectValue> {
     return item;
   }
 
-  public value(): ObjectValue {
+  public getValue(): ObjectValue {
     const value: ObjectValue = {};
     this.builders.forEach(({ key, builder }) => {
-      value[key] = builder.value();
+      value[key] = builder.getValue();
     });
 
     return value;

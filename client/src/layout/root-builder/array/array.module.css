@@ -1,8 +1,8 @@
 .item {
   display: flex;
+  align-items: center;
 }
 
 .delete {
-  margin-top: var(--spacing-small);
   cursor: pointer;
 }

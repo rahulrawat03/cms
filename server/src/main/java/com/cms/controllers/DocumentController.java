@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cms.exceptions.DocumentAlreadyExistsException;
 import com.cms.exceptions.ResourceNotCreatedException;
 import com.cms.exceptions.ResourceNotDeletedException;
 import com.cms.exceptions.ResourceNotFoundException;
@@ -49,7 +48,7 @@ public class DocumentController {
 
   @PostMapping
   public IdResponse<Long> post(@RequestBody Document document)
-      throws DocumentAlreadyExistsException, ResourceNotCreatedException {
+      throws ResourceNotCreatedException {
     return new IdResponse<>(documentService.save(document));
   }
 

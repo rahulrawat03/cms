@@ -3,7 +3,7 @@ import { Builder, BuilderConstructorProperties } from "@cms/types";
 
 export class NumberBuilder implements Builder<number> {
   public readonly key: string;
-  private _value: number;
+  private value: number;
   private name: string;
   private showName: boolean;
 
@@ -14,7 +14,7 @@ export class NumberBuilder implements Builder<number> {
     showName,
   }: BuilderConstructorProperties<number, void>) {
     this.key = `${key}-${crypto.randomUUID()}`;
-    this._value = value;
+    this.value = value;
     this.name = name;
     this.showName = showName;
   }
@@ -27,13 +27,13 @@ export class NumberBuilder implements Builder<number> {
         name={this.name}
         showName={this.showName}
         type={"number"}
-        initialValue={this._value}
-        setValue={(value) => (this._value = value as number)}
+        initialValue={this.value}
+        setValue={(value) => (this.value = value as number)}
       />
     );
   }
 
-  public value() {
-    return this._value;
+  public getValue() {
+    return this.value;
   }
 }

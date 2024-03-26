@@ -10,7 +10,7 @@ import { Button } from "../common";
 
 export class ArrayBuilder implements Builder<ArrayValue> {
   public readonly key: string;
-  private _value: ArrayValue;
+  private value: ArrayValue;
   private name: string;
   private showName: boolean;
 
@@ -24,11 +24,11 @@ export class ArrayBuilder implements Builder<ArrayValue> {
     showName,
   }: BuilderConstructorProperties<ArrayValue, ArraySchema>) {
     this.key = key;
-    this._value = value;
+    this.value = value;
     this.name = name;
     this.showName = showName;
 
-    this.builder = new RootArrayBuilder(schema, this._value);
+    this.builder = new RootArrayBuilder(schema, this.value);
   }
 
   private handleClick() {
@@ -45,12 +45,12 @@ export class ArrayBuilder implements Builder<ArrayValue> {
     );
   }
 
-  public value() {
-    return this._value;
+  public getValue() {
+    return this.value;
   }
 
   public update() {
-    this._value.values.length = 0;
-    this._value.values.push(...this.builder.value().values);
+    this.value.values.length = 0;
+    this.value.values.push(...this.builder.getValue().values);
   }
 }

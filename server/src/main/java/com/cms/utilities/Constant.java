@@ -23,4 +23,6 @@ public class Constant {
   public static final @NonNull String INTERNAL_SERVER_ERROR = "Internal Server Error";
 
   public static final @NonNull String UNKNOWN_RESOURCE = "Uploaded file type is unknown.";
+
+  public static final @NonNull String EMPTY_IDENTIFIER = "Identifier cannot be empty.";
 }

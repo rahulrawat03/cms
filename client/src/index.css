@@ -62,6 +62,8 @@
 
   --shadow: var(--thickness-small) var(--thickness-small) var(--spacing-normal)
     var(--color-tertiary);
+  --shadow-light: var(--value-none) var(--thickness-small)
+    var(--spacing-x-small) var(--color-secondary);
 
   --value-none: 0rem;
   --factor-none: 0%;
