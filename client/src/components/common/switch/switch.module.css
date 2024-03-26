@@ -1,0 +1,44 @@
+.switchGroup {
+  margin: var(--value-none) var(--spacing-normal);
+}
+
+.title {
+  display: block;
+  font-size: var(--font-size-small);
+  margin-bottom: var(--spacing-x-small);
+  text-transform: capitalize;
+  font-weight: normal;
+}
+
+.switch {
+  width: var(--size-x-large);
+  height: var(--size-normal);
+  outline: none;
+  border: var(--thickness-small) solid var(--color-secondary);
+  background: none;
+  border-radius: calc(0.5 * var(--size-normal));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.switchActive {
+  border: none;
+  background: var(--color-secondary);
+}
+
+.knob {
+  width: var(--size-small);
+  height: var(--size-small);
+  border-radius: var(--border-radius-full);
+  background: var(--color-secondary);
+  margin: var(--value-none) var(--spacing-x-small);
+  position: relative;
+  left: var(--value-none);
+  transition: var(--transition-small);
+}
+
+.switchActive .knob {
+  background: var(--color-primary);
+  left: var(--spacing-huge);
+}

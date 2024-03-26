@@ -18,6 +18,7 @@ export class _Value {
     switch (schemaType) {
       case SchemaType.STRING:
       case SchemaType.NUMBER:
+      case SchemaType.BOOLEAN:
       case SchemaType.IMAGE:
       case SchemaType.FILE:
         return this.getPrimitiveValue(type);
@@ -42,6 +43,8 @@ export class _Value {
         return 0;
       case SchemaType.STRING:
         return "";
+      case SchemaType.BOOLEAN:
+        return false;
       default:
         return {
           type,

@@ -69,10 +69,11 @@ Array allows the addition of multiple schema items of pre-configured types in se
 ### Primitives
 
 These are the basic types using which complex schema can be created.  
-There are four of these foundation types :
+There are five of these foundation types :
 
 - `string`
 - `number`
+- `boolean`
 - `image`
 - `file`
 
@@ -83,7 +84,7 @@ Let's design the schema for a movie information service.
 ### Movie
 
 Since the service is all about the movies, this will be core entity of our service.
-A movie can have attributes like `title`, `rating`, `poster`, `trailer`, `genre`, `languages`, `actors`, `country` and many more. Let's concentrate on first four attributes for now.
+A movie can have attributes like `title`, `rating`, `hit`, `poster`, `trailer`, `genre`, `languages`, `actors`, `country` and many more. Let's concentrate on first five attributes for now.
 
 ```js
   {
@@ -99,6 +100,10 @@ A movie can have attributes like `title`, `rating`, `poster`, `trailer`, `genre`
         name: "rating",
         type: "number",
       },
+      {
+        name: "hit",
+        type: "boolean",
+      }
       {
         name: "poster",
         type: "image",
@@ -152,7 +157,7 @@ Now the schema looks like this.
 
 ### Actor
 
-Actors are one of the most important attribute of a movie but `actor` entity itself can have much more to it apart from just a name. So, we cannot define an `actor` using one of our primitive types. This is where we make use of `object` to create a schema type specific to our use-case using the foundation types.
+Actors are one of the most important attributes of a movie but `actor` entity itself can have much more to it apart from just a name. So, we cannot define an `actor` using one of our primitive types. This is where we make use of `object` to create a schema type specific to our use-case using the foundation types.
 
 ```js
   {
@@ -202,7 +207,7 @@ Now, let's add the corresponding property to the document.
   }
 ```
 
-We can see the corresponding change on the client.  
+We can see the changes on the client.  
 <img src="./assets/movie_actor_i.png" width="600" />  
 <img src="./assets/movie_actor_ii.png" width="600" />  
 <img src="./assets/movie_actor_iii.png" width="600" />  

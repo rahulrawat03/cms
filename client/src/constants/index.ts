@@ -4,6 +4,7 @@ export class Constant {
   public static readonly PRIMITIVE_SCHEMA_TYPES: Set<string> = new Set([
     SchemaType.NUMBER,
     SchemaType.STRING,
+    SchemaType.BOOLEAN,
     SchemaType.IMAGE,
     SchemaType.FILE,
   ]);

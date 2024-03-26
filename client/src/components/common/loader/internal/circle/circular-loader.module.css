@@ -26,7 +26,7 @@
   width: var(--size-normal);
   height: var(--size-normal);
   top: var(--value-none);
-  left: var(--spacing-huge);
+  left: var(--spacing-x-huge);
 }
 
 .circleMedium {
@@ -39,7 +39,7 @@
 .circleSmall {
   width: var(--size-x-small);
   height: var(--size-x-small);
-  top: var(--spacing-huge);
+  top: var(--spacing-x-huge);
   left: var(--spacing-x-small);
 }
 

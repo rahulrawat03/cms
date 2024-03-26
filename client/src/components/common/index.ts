@@ -4,3 +4,4 @@ export * from "./image";
 export * from "./input";
 export * from "./loader";
 export * from "./spacer";
+export * from "./switch";

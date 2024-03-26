@@ -24,6 +24,7 @@ export class _Schema {
     switch (schemaType) {
       case SchemaType.STRING:
       case SchemaType.NUMBER:
+      case SchemaType.BOOLEAN:
       case SchemaType.IMAGE:
       case SchemaType.FILE:
         return this.getPrimitiveSchema(type);
@@ -97,7 +98,8 @@ export class _Schema {
   public inferWrapperSchemaType(value: Value) {
     if (
       typeof value === SchemaType.NUMBER ||
-      typeof value === SchemaType.STRING
+      typeof value === SchemaType.STRING ||
+      typeof value === SchemaType.BOOLEAN
     ) {
       return typeof value;
     }

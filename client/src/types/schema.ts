@@ -33,6 +33,7 @@ export interface DocumentSchema {
 export enum SchemaType {
   NUMBER = "number",
   STRING = "string",
+  BOOLEAN = "boolean",
   IMAGE = "image",
   FILE = "file",
   ARRAY = "array",

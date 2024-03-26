@@ -18,6 +18,10 @@ export const schema: Schema[] = [
         type: "number",
       },
       {
+        name: "hit",
+        type: "boolean",
+      },
+      {
         name: "poster",
         type: "image",
       },
