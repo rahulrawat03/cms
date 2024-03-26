@@ -6,7 +6,7 @@ import { ImageBuilder } from "../image";
 import { NumberBuilder } from "../number";
 import { ObjectBuilder } from "../object";
 import { StringBuilder } from "../string";
-import { BooleanBuilder } from "../switch";
+import { BooleanBuilder } from "../boolean";
 import { UnknownBuilder } from "../unknown";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
