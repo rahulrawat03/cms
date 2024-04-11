@@ -1,16 +1,21 @@
 import { SchemaBuilder } from "@cms/schema";
 import { documentStore } from "@cms/stores";
-import { observer } from "mobx-react-lite";
+import { useStore } from "@rahulrawat03/mustate";
 import css from "./document-details.module.css";
 import { Header } from "./header";
-
-export const DetailsSection = observer(Component);
 
 interface DetailsSectionProps {
   type: string;
 }
 
-function Component({ type }: Readonly<DetailsSectionProps>) {
+export function DetailsSection({ type }: Readonly<DetailsSectionProps>) {
+  useStore([
+    {
+      store: documentStore,
+      include: ["_builder", "_currentDocument"],
+    },
+  ]);
+
   if (!(documentStore.currentDocument && documentStore.builder)) {
     return <div className={css.documentDetails} />;
   }

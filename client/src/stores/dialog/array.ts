@@ -1,7 +1,6 @@
 import { RootBuilder } from "@cms/layout";
 import { SchemaBuilder } from "@cms/schema";
 import { ArrayValue, Builder, Callback } from "@cms/types";
-import { runInAction } from "mobx";
 import { dialogStore } from "./base";
 import { LayerType } from "./types";
 
@@ -16,10 +15,8 @@ class ArrayStore {
 
   public delete(index: number) {
     if (this.builders) {
-      runInAction(() => {
-        this.builders!.splice(index, 1);
-        dialogStore.trigger = !dialogStore.trigger;
-      });
+      this.builders.splice(index, 1);
+      dialogStore.trigger = !dialogStore.trigger;
     }
   }
 
@@ -35,10 +32,8 @@ class ArrayStore {
 
   public addBuilder(key: string, builder: Builder<ArrayValue>) {
     if (this.builders) {
-      runInAction(() => {
-        this.builders!.push({ key, builder });
-        dialogStore.trigger = !dialogStore.trigger;
-      });
+      this.builders.push({ key, builder });
+      dialogStore.trigger = !dialogStore.trigger;
     }
   }
 

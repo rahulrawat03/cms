@@ -2,27 +2,33 @@ import { DocumentBuilder } from "@cms/components";
 import { SchemaBuilder } from "@cms/schema";
 import { documentStore } from "@cms/stores";
 import { DocumentSchema } from "@cms/types";
-import { observer } from "mobx-react-lite";
+import { useStore } from "@rahulrawat03/mustate";
 import css from "./document-list.module.css";
 
-export const DocumentList = observer(Component);
+export function DocumentList() {
+  useStore([
+    {
+      store: documentStore,
+      include: ["_documents", "searchQuery"],
+    },
+  ]);
 
-function Component() {
-  const documents = documentStore.documents;
-  const documentBuilders = documents.map(({ id, type, identifier }) => {
-    const schema = SchemaBuilder.instance.getSchema(
-      type,
-      true
-    ) as DocumentSchema;
+  const documentBuilders = documentStore.documents.map(
+    ({ id, type, identifier }) => {
+      const schema = SchemaBuilder.instance.getSchema(
+        type,
+        true
+      ) as DocumentSchema;
 
-    return new DocumentBuilder({
-      key: id.toString(),
-      value: { type, isUnknown: schema.type !== type },
-      name: identifier,
-      showName: true,
-      schema,
-    });
-  });
+      return new DocumentBuilder({
+        key: id.toString(),
+        value: { type, isUnknown: schema.type !== type },
+        name: identifier,
+        showName: true,
+        schema,
+      });
+    }
+  );
 
   return (
     <div className={css.documentList}>

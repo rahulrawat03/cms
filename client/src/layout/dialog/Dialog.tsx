@@ -1,18 +1,21 @@
 import { useClickOutside } from "@cms/hooks";
 import { LayerType, dialogStore } from "@cms/stores";
-import { observer } from "mobx-react-lite";
+import { useStore } from "@rahulrawat03/mustate";
 import { ReactElement, useRef } from "react";
 import { Add } from "./add";
 import { Close } from "./close";
 import css from "./dialog.module.css";
 import { Empty } from "./empty";
 
-export const Dialog = observer(Component);
+export function Dialog() {
+  useStore([
+    {
+      store: dialogStore,
+      include: ["layers", "trigger"],
+    },
+  ]);
 
-function Component() {
   const currentLayer = dialogStore.current;
-  dialogStore.trigger;
-
   const dialogRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 

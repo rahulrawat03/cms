@@ -1,29 +1,13 @@
-import {
-  action,
-  computed,
-  makeObservable,
-  observable,
-  runInAction,
-} from "mobx";
+import { createStore } from "@rahulrawat03/mustate";
 import { Layer } from "./types";
 
 class DialogStore {
-  public static readonly instance = new DialogStore();
+  public static readonly instance = createStore(new DialogStore());
 
   private layers: Layer[] = [];
   public trigger: boolean = false;
 
-  private constructor() {
-    makeObservable<DialogStore, "layers" | "updateCurrentData">(this, {
-      layers: observable,
-      trigger: observable,
-      add: action,
-      remove: action,
-      clear: action,
-      updateCurrentData: action,
-      current: computed,
-    });
-  }
+  private constructor() {}
 
   public get current() {
     if (!this.isEmpty()) {
@@ -34,31 +18,22 @@ class DialogStore {
   }
 
   public add(layer: Layer) {
-    runInAction(() => {
-      this.updateCurrentData();
-
-      this.layers.push(layer);
-    });
+    this.updateCurrentData();
+    this.layers = [...this.layers, layer];
   }
 
   public remove() {
     if (!this.isEmpty()) {
-      runInAction(() => {
-        this.updateCurrentData();
-
-        this.layers.pop();
-      });
+      this.updateCurrentData();
+      this.layers = this.layers.slice(0, this.layers.length - 1);
     }
   }
 
   public clear() {
-    runInAction(() => {
-      while (this.layers.length > 0) {
-        this.updateCurrentData();
-
-        this.layers.pop();
-      }
-    });
+    while (this.layers.length > 0) {
+      this.updateCurrentData();
+      this.layers = this.layers.slice(0, this.layers.length - 1);
+    }
   }
 
   public isEmpty() {

@@ -1,32 +1,18 @@
 import { Constant } from "@cms/constants";
 import { Queue } from "@cms/utils";
-import {
-  action,
-  computed,
-  makeObservable,
-  observable,
-  runInAction,
-} from "mobx";
+import { createStore } from "@rahulrawat03/mustate";
 
 class ErrorStore {
   private static LOG_TIME = 5 * 1000;
   private static MAX_ERROR_LOGS = 5;
 
-  public static readonly instance = new ErrorStore();
+  public static readonly instance = createStore(new ErrorStore());
 
   private _isActive: boolean = false;
   private _currentError: string = "";
   private errorQueue: Queue<string> = new Queue<string>();
 
-  private constructor() {
-    makeObservable<ErrorStore, "_isActive" | "_currentError" | "log">(this, {
-      _isActive: observable,
-      _currentError: observable,
-      log: action,
-      isActive: computed,
-      currentError: computed,
-    });
-  }
+  private constructor() {}
 
   public get isActive() {
     return this._isActive;
@@ -51,19 +37,15 @@ class ErrorStore {
 
   private async log() {
     const initiator = setTimeout(() => {
-      runInAction(() => {
-        this._isActive = true;
-        this._currentError = this.errorQueue.peek()!;
-      });
+      this._isActive = true;
+      this._currentError = this.errorQueue.peek()!;
 
       clearTimeout(initiator);
     }, (this.errorQueue.size - 1) * ErrorStore.LOG_TIME);
 
     const terminator = setTimeout(() => {
-      runInAction(() => {
-        this._isActive = false;
-        this._currentError = "";
-      });
+      this._isActive = false;
+      this._currentError = "";
 
       clearTimeout(terminator);
       this.errorQueue.remove();

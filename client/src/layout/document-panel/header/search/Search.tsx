@@ -4,7 +4,7 @@ import css from "./search.module.css";
 
 export function Search() {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    documentStore.query = event.target.value;
+    documentStore.setQuery(event.target.value);
   };
 
   return (

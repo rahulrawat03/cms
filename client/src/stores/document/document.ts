@@ -8,17 +8,11 @@ import {
   Value,
 } from "@cms/types";
 import { api } from "@cms/utils";
-import {
-  action,
-  computed,
-  makeObservable,
-  observable,
-  runInAction,
-} from "mobx";
 import { searchStore } from "./search";
+import { createStore } from "@rahulrawat03/mustate";
 
 class DocumentStore {
-  public static readonly instance = new DocumentStore();
+  public static readonly instance = createStore(new DocumentStore());
 
   private endpoint: string = "/document";
 
@@ -32,27 +26,7 @@ class DocumentStore {
 
   private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
-  private constructor() {
-    makeObservable<
-      DocumentStore,
-      | "_documents"
-      | "_currentDocument"
-      | "_builder"
-      | "searchQuery"
-      | "updateBuilder"
-    >(this, {
-      _documents: observable,
-      _currentDocument: observable,
-      _builder: observable,
-      searchQuery: observable,
-      fetchDocument: action,
-      fetchDocuments: action,
-      updateDocument: action,
-      updateBuilder: action,
-      documents: computed,
-      currentDocument: computed,
-    });
-  }
+  private constructor() {}
 
   // Getters & Setters ==============================================
 
@@ -72,16 +46,11 @@ class DocumentStore {
     return this._builder;
   }
 
-  public set query(q: string) {
+  public setQuery(q: string) {
     if (this.searchDebounceTimer) {
       clearTimeout(this.searchDebounceTimer);
     }
-
-    this.searchDebounceTimer = setTimeout(() => {
-      runInAction(() => {
-        this.searchQuery = q;
-      });
-    }, 500);
+    this.searchDebounceTimer = setTimeout(() => (this.searchQuery = q), 500);
   }
 
   // CRUD ===========================================================
@@ -94,11 +63,9 @@ class DocumentStore {
     try {
       const documents = await api<DocumentPreview[]>(this.endpoint);
 
-      runInAction(() => {
-        documents.sort((a, b) => a.identifier.localeCompare(b.identifier));
-        this._documents = documents;
-        searchStore.init(documents);
-      });
+      documents.sort((a, b) => a.identifier.localeCompare(b.identifier));
+      this._documents = documents;
+      searchStore.init(documents);
     } catch (ex: unknown) {
       // pass
     }
@@ -110,16 +77,14 @@ class DocumentStore {
         return;
       }
 
-      runInAction(() => (this._builder = null));
+      this._builder = null;
 
       const document = await api<Document>(`${this.endpoint}/${id}`);
 
       this.populateEmptyProperties(document.type, document.data);
 
-      runInAction(() => {
-        this._currentDocument = document;
-        this.updateBuilder(document);
-      });
+      this._currentDocument = document;
+      this.updateBuilder(document);
     } catch (ex: unknown) {
       // pass
     }
@@ -142,12 +107,18 @@ class DocumentStore {
         identifier,
       });
 
-      runInAction(() => {
-        const document = this._documents.find((document) => document.id === id);
-        if (document) {
-          document.identifier = identifier;
-        }
-      });
+      const documentIndex = this._documents.findIndex(
+        (document) => document.id === id
+      );
+      this._documents = [
+        ...this._documents.slice(0, documentIndex),
+        {
+          id,
+          identifier,
+          type,
+        },
+        ...this._documents.slice(documentIndex + 1),
+      ];
     } catch (ex: unknown) {
       // pass
     }
@@ -171,12 +142,10 @@ class DocumentStore {
         data,
       });
 
-      runInAction(() => {
-        this.addDocument({
-          id,
-          identifier,
-          type,
-        });
+      this.addDocument({
+        id,
+        identifier,
+        type,
       });
 
       return { id, type };
@@ -197,10 +166,11 @@ class DocumentStore {
 
       const index = this._documents.findIndex((document) => document.id === id);
 
-      runInAction(() => {
-        this._documents.splice(index, 1);
-        searchStore.removeDocument(identifier);
-      });
+      this._documents = [
+        ...this._documents.slice(0, index),
+        ...this._documents.slice(index + 1),
+      ];
+      searchStore.removeDocument(identifier);
 
       if (this.documents.length === 0) {
         return { id: -1, type: "" };
@@ -221,18 +191,13 @@ class DocumentStore {
       type as SchemaType
     ) as Document;
 
-    runInAction(() => {
-      this._currentDocument = defaultDocument;
-      this.updateBuilder(defaultDocument);
-    });
+    this._currentDocument = defaultDocument;
+    this.updateBuilder(defaultDocument);
   }
 
   private updateBuilder(document: Document) {
     const schema = SchemaBuilder.instance.getSchema(document.type);
-
-    runInAction(() => {
-      this._builder = new RootObjectBuilder(schema, document.data);
-    });
+    this._builder = new RootObjectBuilder(schema, document.data);
   }
 
   private populateEmptyProperties(type: string, data: ObjectValue) {
@@ -266,10 +231,12 @@ class DocumentStore {
       index++;
     }
 
-    runInAction(() => {
-      this._documents.splice(index, 0, document);
-      searchStore.addDocument(document);
-    });
+    this._documents = [
+      ...this._documents.slice(0, index),
+      document,
+      ...this._documents.slice(index),
+    ];
+    searchStore.addDocument(document);
   }
 }
 
